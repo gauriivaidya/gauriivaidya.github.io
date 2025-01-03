@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Dancing+Script&family=Poppins:wght@400;600&display=swap" rel="stylesheet"> <!-- Lora and Dancing Script fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Correct Font Awesome link -->
+    <style>
+        .navbar-brand {
+            font-family: 'Dancing Script', cursive; /* Handwriting font for Portfolio */
+            font-size: 2.5rem; /* Increase font size for "Portfolio" */
+        }
+        body {
+            scroll-behavior: smooth;
+            font-family: 'Poppins', sans-serif;
+            color: #001f3d; /* Dark teal for body text */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif; /* Georgia font for headings */
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #36454F; /* Dark teal background */
+        }
+        .sticky-header .navbar-brand,
+        .sticky-header .nav-link {
+            color: #fff;
+        }
+        .sticky-header .nav-link:hover {
+            color: #f5a5b5; /* Light Peach */
+        }
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .timeline-item {
+            flex: 1 1 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .social-icons a {
+            font-size: 24px;
+            margin: 0 15px;
+            color: #36454F; /* Teal color for icons */
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: #d14466; /* Light Peach on hover */
+        }
+        .achievement-card {
+            margin-bottom: 20px;
+        }
+        /* Button Styling */
+        .btn-primary, .btn-secondary {
+            background-color: #d14466; /* Darker Peach */
+            border-color: #d14466;
+            font-family: 'Georgia', serif;
+            margin-right: 20px;
+            border-radius: 50px;
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            background-color: black;
+            border-color: black;
+        }
+        .btn-primary:focus, .btn-secondary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.5);
+        }
+        /* Hero Section */
+        header {
+            background-color: #36454F; /* Teal color for the hero section */
+            color: #fff; /* White text for contrast */
+        }
+        section h2 {
+            color: #36454F;
+        }
+        .section-header {
+            background-color: #d14466; /* Darker Peach */
+            padding: 15px;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        /* Accordion Styling */
+/* Accordion Styling */
+/* Accordion Styling */
+.accordion-button {
+    background-color: #f5f5f5; /* Light background for the accordion button */
+    color: #001f3d; /* Teal color for the accordion text */
+    border-radius: 10px; /* Rounded button corners */
+    border: 1px solid #dee2e6; /* Border for the button */
+    padding: 10px 20px; /* Adjust padding for better appearance */
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #d14466; /* Teal background when active */
+    color: #fff; /* White text when active */
+    border-radius: 10px; /* Keep the rounded button when expanded */
+    border: 1px solid #dee2e6; /* Border for the active state */
+}
+
+.accordion-button:not(.collapsed)::after {
+    color: #fff; /* Change dropdown arrow to white when active */
+}
+
+.accordion-button:hover {
+    background-color: #d14466; /* Light Peach on hover */
+    color: #fff;
+    border-radius: 10px; /* Keep rounded button on hover */
+}
+
+/* Accordion item body */
+.accordion-body {
+    background-color: #f7f7f7; /* Light background for the body */
+    border-radius: 10px; /* Rounded corners for the body */
+    border: 1px solid #dee2e6; /* Border for the content */
+    padding: 20px; /* Adjust padding for content */
+}
+
+/* Accordion item container */
+.accordion-item {
+    border-radius: 10px; /* Rounded corners for each accordion item */
+    border: none; /* Remove default borders */
+    margin-bottom: 10px; /* Space between accordion items */
+}
+
+/* Ensure the accordion container itself has rounded corners */
+.accordion {
+    border-radius: 10px; /* Rounded corners for the accordion container */
+    overflow: hidden; /* To ensure no content spills out */
+}
+
+
+
+        /* Footer Styling */
+        footer {
+            background-color: #36454F; /* Teal background */
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .back-to-top {
+            font-size: 30px;
+            color: #d14466;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .back-to-top:hover {
+            color: #f5a5b5; /* Light Peach on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Header -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-header">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Gauri Vaidya</a> <!-- Portfolio in handwriting font -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#education-experience">Education & Experience</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#publications">Publications</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#achievements">Achievements</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#volunteering">Volunteering</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#talks">Talks</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+<header class="d-flex align-items-center" style="min-height: 85vh; background-color: #36454F; color: #fff;">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Photo Section -->
+            <div class="col-md-6 text-center text-md-start">
+                <div style="position: relative; width: 300px; height: 400px; overflow: hidden; border-radius: 0%; filter: grayscale(50%); margin-left: 0;">
+                    <img src="images/profile_transparent.png" alt="Profile Picture" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+
+            <!-- Profile Info Section -->
+            <div class="col-md-6 text-center text-md-end">
+                <h1 style="font-size: 3rem; font-weight: bold;">Gauri Vaidya</h1>
+                <h3 style="color: #d14466; font-size: 1.5rem; font-weight: bold;">PhD, Artificial Intelligence</h3>
+                <p class="lead mt-3" style="line-height: 1.8;">
+                    Passionate about driving innovation through AI and advancing knowledge in machine learning and optimization.
+                </p>
+                <div class="mt-4">
+                    <a href="#" class="btn btn-primary btn-lg me-3" style="border-radius: 50px; background-color: #d14466; border: none;">Hire Me</a>
+                    <a href="#" class="btn btn-outline-light btn-lg" style="border-radius: 50px;">Resume</a>
+                </div>
+                <div class="d-flex justify-content-center justify-content-md-end mt-4">
+                    <a href="https://www.linkedin.com/in/yourprofile" class="mx-2" target="_blank" style="color: #f5a5b5;"><i class="fab fa-linkedin fa-lg"></i></a>
+                    <a href="mailto:your-email@example.com" class="mx-2" style="color: #f5a5b5;"><i class="fas fa-envelope fa-lg"></i></a>
+                    <a href="https://scholar.google.com/citations?user=your-user-id" class="mx-2" target="_blank" style="color: #f5a5b5;"><i class="fas fa-graduation-cap fa-lg"></i></a>
+                    <a href="https://twitter.com/yourusername" class="mx-2" target="_blank" style="color: #f5a5b5;"><i class="fab fa-twitter fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Education and Experience Section -->
+    <section id="education-experience" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4">Education & Experience</h2>
+            <div class="accordion" id="eduExpAccordion">
+                <!-- Education -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="educationHeader">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="true" aria-controls="education">
+                            Education
+                        </button>
+                    </h2>
+                    <div id="education" class="accordion-collapse collapse show" aria-labelledby="educationHeader" data-bs-parent="#eduExpAccordion">
+                        <div class="accordion-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h5>M.Sc. in Artificial Intelligence</h5>
+                                    <p>XYZ University (Year-Year)</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>B.Sc. in Computer Science</h5>
+                                    <p>ABC College (Year-Year)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Professional Experience -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="experienceHeader">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#experience" aria-expanded="false" aria-controls="experience">
+                            Professional Experience
+                        </button>
+                    </h2>
+                    <div id="experience" class="accordion-collapse collapse" aria-labelledby="experienceHeader" data-bs-parent="#eduExpAccordion">
+                        <div class="accordion-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h5>Software Engineer</h5>
+                                    <p>ABC Company (Year-Year)</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>Data Scientist</h5>
+                                    <p>XYZ Corporation (Year-Year)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Teaching Experience -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="teachingHeader">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#teaching" aria-expanded="false" aria-controls="teaching">
+                            Teaching Experience
+                        </button>
+                    </h2>
+                    <div id="teaching" class="accordion-collapse collapse" aria-labelledby="teachingHeader" data-bs-parent="#eduExpAccordion">
+                        <div class="accordion-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h5>Lecturer</h5>
+                                    <p>University of DEF (Year-Year)</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>Assistant Professor</h5>
+                                    <p>GHI College (Year-Year)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Publications</h2>
+            <ul>
+                <li>Title of Publication (Year) - Journal/Conference Name</li>
+                <li>Title of Publication (Year) - Journal/Conference Name</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4">Achievements</h2>
+            <div class="row">
+                <div class="col-md-4 achievement-card">
+                    <img src="https://via.placeholder.com/300" class="img-fluid" alt="Achievement">
+                    <p>Award Name (Year) - Description</p>
+                </div>
+                <div class="col-md-4 achievement-card">
+                    <img src="https://via.placeholder.com/300" class="img-fluid" alt="Achievement">
+                    <p>Award Name (Year) - Description</p>
+                </div>
+                <div class="col-md-4 achievement-card">
+                    <img src="https://via.placeholder.com/300" class="img-fluid" alt="Achievement">
+                    <p>Award Name (Year) - Description</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volunteering Section -->
+    <section id="volunteering" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Volunteering</h2>
+            <ul>
+                <li>Organization Name (Year-Year): Brief description of your role.</li>
+                <li>Organization Name (Year-Year): Brief description of your role.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Talks Section -->
+    <section id="talks" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4">Talks</h2>
+            <ul>
+                <li>Title of Talk - Event Name (Year)</li>
+                <li>Title of Talk - Event Name (Year)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Contact Me</h2>
+            <div class="d-flex justify-content-center social-icons">
+                <a href="https://www.linkedin.com/in/yourprofile" class="text-dark" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:your-email@example.com" class="text-dark"><i class="fas fa-envelope"></i></a>
+                <a href="https://scholar.google.com/citations?user=your-user-id" class="text-dark" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+                <a href="https://twitter.com/yourusername" class="text-dark" target="_blank"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with Back to Top -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Your Name. All rights reserved.</p>
+            <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a> <!-- Back to Top Icon -->
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
