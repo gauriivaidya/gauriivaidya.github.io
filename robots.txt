@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://gaurivaidya.github.io/al-folio/sitemap.xml
+Sitemap: https://gaurivaidya.github.io/sitemap.xml
