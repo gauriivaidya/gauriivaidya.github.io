@@ -8,13 +8,15 @@ profile:
   align: right
   image: gv_profile_picture.png
   image_circular: false # crops the image to make it circular
+  more_info:
+    social: true
   # more_info: >
   #   <p>National Kidney Surveillance System</p>
   #   <p>CERC, UHL</p>
   #   <p>Limerick</p>
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
-social: true # includes social icons at the bottom of the page
+social: false # includes social icons at the bottom of the page
 
 announcements:
   enabled: false # includes a list of news items
