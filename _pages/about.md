@@ -7,11 +7,11 @@ permalink: /
 profile:
   align: right
   image: gv_profile_picture.png
-  image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>National Kidney Surveillance System</p>
-    <p>CERC, UHL</p>
-    <p>Limerick</p>
+  image_circular: true # crops the image to make it circular
+  # more_info: >
+  #   <p>National Kidney Surveillance System</p>
+  #   <p>CERC, UHL</p>
+  #   <p>Limerick</p>
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
@@ -27,9 +27,9 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am a Postdoctoral Researcher with the National Kidney Disease Surveillance System[https://www.nkdss.ie/] and Quality Assurance Programme in Ireland under the supervision of Prof. Austin Stack[https://pure.ul.ie/en/persons/austin-stack/]. My current work uses data science and machine learning to study large-scale clinical data and support better, evidence-based care for people with chronic kidney disease (CKD) in the Irish healthcare system.
+I am a Postdoctoral Researcher with the [National Kidney Disease Surveillance System and Quality Assurance Programme](https://www.nkdss.ie/) in [School of Medicine](https://www.ul.ie/ehs/medicine) at [University of Limerick](https://www.ul.ie/), Ireland under the supervision of [Prof. Austin Stack](https://pure.ul.ie/en/persons/austin-stack/). My current work uses data science and machine learning to study large-scale clinical data and support better, evidence-based care for people with chronic kidney disease (CKD) in the Irish healthcare system.
 
-I hold a PhD in Artificial Intelligence from the University of Limerick[https://www.ul.ie/] under the supervision of Prof. Conor Ryan[https://pure.ul.ie/en/persons/conor-ryan/] and Prof. Meghana Kshirsagar[https://pure.ul.ie/en/persons/meghana-kshirsagar/]. During my PhD, I developed efficient hyperparameter optimization methods for machine learning and deep learning models, which helped reduce training time and computing costs by more than 30%.
+I hold a PhD in Artificial Intelligence from the [University of Limerick](https://www.ul.ie/) under the supervision of [Prof. Conor Ryan](https://pure.ul.ie/en/persons/conor-ryan/) and [Prof. Meghana Kshirsagar](https://pure.ul.ie/en/persons/meghana-kshirsagar/). During my PhD, I developed efficient hyperparameter optimization methods for machine learning and deep learning models, which helped reduce training time and computing costs by more than 30%.
 
 My technical skills include machine learning, large language models (LLMs), retrieval-augmented generation (RAG), blockchain, and AI-based analytics. I’ve worked on projects that combine structured and unstructured data, support reproducibility, and focus on fairness in models — mainly in healthcare and public system settings. In 2025, I was named one of Ireland's 30 Under 30: Top People in Tech for my work in digital health research.
 
