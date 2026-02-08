@@ -7,7 +7,7 @@ permalink: /
 profile:
   align: right
   image: gv_profile_picture.png
-  image_circular: true # crops the image to make it circular
+  image_circular: false # crops the image to make it circular
   # more_info: >
   #   <p>National Kidney Surveillance System</p>
   #   <p>CERC, UHL</p>
