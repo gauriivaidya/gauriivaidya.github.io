@@ -6,7 +6,7 @@ import { Row } from "./YearGroup";
 export const TYPE_LABEL: Record<string, string> = { journal: "Journal", conference: "Conference", preprint: "Preprint", "book chapter": "Book chapter", other: "Other" };
 
 /** One publication, al-folio style: venue badge · title · authors · venue · ABS/BIB + link buttons. */
-export function PublicationEntry({ pub, idPrefix = "" }: { pub: Publication; idPrefix?: string }) {
+export function PublicationEntry({ pub }: { pub: Publication }) {
   const [open, setOpen] = useState<"" | "abs" | "bib">("");
   const [copied, copy] = useCopy();
   const flip = (p: "abs" | "bib") => setOpen(open === p ? "" : p);
@@ -18,7 +18,7 @@ export function PublicationEntry({ pub, idPrefix = "" }: { pub: Publication; idP
   const links = ([["HTML", pub.url], ["PDF", pub.pdf], ["DOI", pub.doi && `https://doi.org/${pub.doi}`], ["Code", pub.code], ["Slides", pub.slides], ["Video", pub.video], ["Project", pub.project]]
     .filter(([, u]) => u)) as [string, string][];
   const type = pub.label ?? TYPE_LABEL[pub.type];
-  const id = idPrefix + pub.key;
+  const id = pub.key;
   return (
     <Row className="pub" badge={pub.abbr ?? type} title={pub.venue || type} data-type={pub.type} data-year={pub.year ?? ""}>
       <h3 className="pub-title">{pub.title}</h3>

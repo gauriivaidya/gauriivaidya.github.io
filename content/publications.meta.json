@@ -1,5 +1,5 @@
 {
-  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), label, abbr (venue abbreviation shown as the badge), selected (true = listed under 'Selected publications' on the home page), abstract, link (paper page), pdf, doi (bare, e.g. 10.1000/xyz), code, video, slides, project. A button is shown only when a URL or abstract is set. Only add verified URLs.",
+  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), label, abbr (venue abbreviation shown as the badge), abstract, link (paper page), pdf, doi (bare, e.g. 10.1000/xyz), code, video, slides, project. A button is shown only when a URL or abstract is set. Only add verified URLs.",
   "bindra2021insights": {
     "abbr": "SCI"
   },
@@ -36,8 +36,7 @@
     "abbr": "BioC"
   },
   "kshirsagar2025bias": {
-    "abbr": "ICAART",
-    "selected": true
+    "abbr": "ICAART"
   },
   "kshirsagar2025webtool": {
     "abbr": "ICAART"
@@ -59,8 +58,7 @@
     "abbr": "EMJ"
   },
   "ryan2022prng": {
-    "abbr": "Sci. Rep.",
-    "selected": true
+    "abbr": "Sci. Rep."
   },
   "urban2025datapulse": {
     "abbr": "DATA"
@@ -77,8 +75,7 @@
     "abbr": "Poster"
   },
   "vaidya2023grammatical": {
-    "abbr": "Algorithms",
-    "selected": true
+    "abbr": "Algorithms"
   },
   "vaidya2024hyperge": {
     "type": "other",
@@ -86,8 +83,7 @@
     "abbr": "Poster"
   },
   "vaidya2025purge": {
-    "abbr": "ICAART",
-    "selected": true
+    "abbr": "ICAART"
   },
   "vaidya2025resource": {
     "abbr": "ICAART"

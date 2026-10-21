@@ -56,16 +56,13 @@ await t("home = about: name, role, portrait right with affiliation, long bio, co
   ok(!(await page.locator("main").textContent()).includes("Recent"), "no Recent"); ok(!/news/i.test(await page.locator("main h2").allTextContents().then((x) => x.join())), "no news");
   ok(!(await page.content()).includes("I use data and AI"), "no tagline");
 });
-await t("home: selected publications from the meta flag, al-folio rows; social icon row last", async () => {
+await t("home: no selected-publications section; social icon row last", async () => {
   await page.goto(B + "/");
-  eq((await page.locator(".selected h2").textContent()).trim(), "Selected publications");
-  const keys = ["kshirsagar2025bias", "vaidya2025purge", "vaidya2023grammatical", "ryan2022prng"];
-  eq(await page.locator(".selected .pub").count(), keys.length, "count");
-  eq((await page.locator(".selected .badge").allTextContents()).join("|"), "ICAART|ICAART|Algorithms|Sci. Rep.");
-  const b = page.locator(".selected .pub").nth(1).locator(".pub-links button", { hasText: "Bib" }); await b.click(); ok((await page.locator("#bib-sel-vaidya2025purge").textContent()).includes("vaidya2025purge"), "bib");
+  eq(await page.locator("main .pub, main .selected, main .rows").count(), 0, "no publication rows on home");
+  ok(!/selected publications/i.test(await page.locator("main").textContent()), "no Selected publications heading");
   const s = page.locator("ul.social a"); eq((await s.evaluateAll((l) => l.map((a) => a.getAttribute("aria-label")))).join("|"), "Email|Google Scholar|ORCID|GitHub|LinkedIn|CV");
   eq(await s.locator("svg.icon").count(), 6, "icons"); eq(await page.locator('ul.social a[href="/cv/"]').count(), 1, "cv page"); eq(await page.locator('ul.social a[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "email");
-  const [sel, soc] = [await page.locator(".selected").boundingBox(), await page.locator("ul.social").boundingBox()]; ok(soc.y > sel.y + sel.height - 1, "social at bottom");
+  const [bio, soc] = [await page.locator(".about-body").boundingBox(), await page.locator("ul.social").boundingBox()]; ok(soc.y > bio.y + bio.height - 1, "social at bottom");
 });
 await t("uniform top nav on every page, no sidebar, aligned content", async () => {
   await page.goto(B + "/"); const x0 = await page.locator(".logo").evaluate((e) => e.getBoundingClientRect().left);
@@ -106,7 +103,7 @@ await t("publications: checkbox years + types with search, sort, active chips, c
 await t("publications: al-folio rows — year label left, teal venue badge, title/authors/venue, only real URLs become buttons", async () => {
   await page.goto(B + "/publications/");
   const g = page.locator(".yg").first(); const [yb, lb] = [await g.locator(".yg-year").boundingBox(), await g.locator(".rows").boundingBox()]; ok(yb.x + yb.width <= lb.x, "year left of list");
-  ok(parseFloat(await g.locator(".yg-year").evaluate((e) => getComputedStyle(e).fontSize)) >= 30, "large year");
+  const [ys, hs] = [parseFloat(await g.locator(".yg-year").evaluate((e) => getComputedStyle(e).fontSize)), parseFloat(await page.locator("h1").evaluate((e) => getComputedStyle(e).fontSize))]; ok(ys >= 22 && ys < hs * 0.75, "year label clear but below h1 " + ys + "/" + hs);
   const row = page.locator(".pub").first(); const [bd, bo] = [await row.locator(".badge").boundingBox(), await row.locator(".row-body").boundingBox()]; ok(bd.x + bd.width <= bo.x, "badge | body");
   eq(await row.locator(".badge").evaluate((e) => getComputedStyle(e).backgroundColor), "rgb(15, 110, 110)", "teal badge");
   eq(await page.locator(".pub .badge").count(), await page.locator(".pub").count(), "badge on every entry");

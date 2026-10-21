@@ -6,6 +6,9 @@
   --bg:#FAFAF7;--bg-2:#F3F2EE;--pill:#FFFFFF;--text:#1C1B19;--text-2:#57534D;--line:#E6E4DE;
   --accent:#0F6E6E;--on-accent:#FFFFFF;--accent-soft:#E3F0EE;--accent-line:#C9E1DD;--year:#5A9690;
   --font-head:"Montserrat",system-ui,sans-serif;--font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* type scale (root 16px): 12 · 14 · 15 · 16 · 17 · 18 · 20 · 24 · 30–36 */
+  --fs-2xs:.75rem;--fs-xs:.875rem;--fs-sm:.9375rem;--fs-ui:1rem;--fs-base:1.0625rem;--fs-md:1.125rem;--fs-lg:1.25rem;--fs-xl:1.5rem;--fs-2xl:clamp(1.875rem,1.5rem + 1.2vw,2.25rem);
+  --lh-body:1.65;--lh-snug:1.4;--lh-tight:1.22;
   --measure:760px;--gutter:clamp(20px,5vw,48px);--header-h:72px;
 }
 :root[data-theme=dark]{

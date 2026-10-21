@@ -21,7 +21,7 @@ Push to `main` of the repo **gauriivaidya.github.io**. In *Settings → Pages* c
 | Teaching | `src/data/teaching.ts` — add an object (code, name, years, institution, role, description, optional `resources`). |
 | Events & Media | `src/data/events.ts` — add an item; put real photos in `public/images/events/` and set `image`/`imageAlt`. Without an image a neutral placeholder is drawn. |
 | Contact links, hero sentence, role | `src/data/site.ts`. Values set to `PLACEHOLDER` show as “To be added”. |
-| Home = About (al-folio profile) | bio text in `src/data/bio.ts`; address under the portrait in `src/data/site.ts` (`address`); selected papers = `"selected": true` in `content/publications.meta.json` |
+| Home = About (al-folio profile) | bio text in `src/data/bio.ts`; address under the portrait in `src/data/site.ts` (`address`) |
 | Venue badges / abstracts | `"abbr"` and `"abstract"` per key in `content/publications.meta.json` (an ABS button appears only when an abstract exists) |
 | `/about/` | alias of `/` (prerendered with canonical `/`, URL rewritten client-side) |
 | CV | `public/cv.pdf` — shown on `/cv/` (embedded on desktop, download/open buttons everywhere) |

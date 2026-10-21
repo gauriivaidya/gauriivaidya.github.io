@@ -5,7 +5,6 @@ export type Publication = {
   /** Venue abbreviation shown as the badge (content/publications.meta.json). */
   abbr?: string | null;
   /** Listed under "Selected publications" on the home page. */
-  selected?: boolean;
   abstract?: string | null;
   authors: string[];
   title: string;
