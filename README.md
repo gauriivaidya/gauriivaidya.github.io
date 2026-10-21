@@ -25,6 +25,15 @@ Push to `main` of the repo **gauriivaidya.github.io**. In *Settings → Pages* c
 | Portrait | replace the `.portrait-ph` block in `src/pages/About.tsx` with an `<img>` |
 | CV | `public/cv.pdf` |
 
+## Home page design
+`src/data/site.ts` → `homeVariant`: `"classic"` (centred intro, live default), `"areas"` (option A: research areas + recognitions) or `"editorial"` (option B). Content for A/B lives in `src/data/home.ts`.
+To preview both without changing the default: `VITE_PREVIEW_HOMES=1 npm run build && npm run preview`, then open `/preview/home-a/` and `/preview/home-b/` (noindex, not in sitemap, not built in normal/CI builds).
+Research-area links use `/publications/?topic=health|trustworthy-ai|optimisation` (keyword filter in `home.ts`).
+
+## Logo / favicon
+Sources: `brand/option-{a,b,c}.svg`, generated as pure SVG paths from the self-hosted fonts by `python3 scripts/make-logos.py` (needs `fonttools` + `brotli`).
+Set the favicon (+ 32 px PNG, apple-touch-icon, manifest icons): `node scripts/render-icons.mjs c` (or `a` / `b`).
+
 ## Structure
 ```
 content/            publications.bib, publications.meta.json

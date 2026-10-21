@@ -4,6 +4,7 @@ import { PublicationEntry, TYPE_LABEL } from "../components/PublicationEntry";
 import { Search, Select } from "../components/Search";
 import data from "../data/publications.json";
 import type { Publication } from "../data/types";
+import { areas } from "../data/home";
 
 const pubs = data as Publication[];
 const TYPE_ORDER = ["journal", "conference", "preprint", "book chapter", "other"];
@@ -30,7 +31,12 @@ export function Publications() {
   const [years, setYears] = useState<Set<string>>(new Set());
   const [types, setTypes] = useState<Set<string>>(new Set());
   const [sort, setSort] = useState("newest");
-  useEffect(() => { const v = new URLSearchParams(window.location.search).get("q"); if (v) setQ(v); }, []);
+  const [topic, setTopic] = useState("");
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search); const v = sp.get("q"); if (v) setQ(v);
+    const t = sp.get("topic"); if (t && areas.some((a) => a.topic === t)) setTopic(t);
+  }, []);
+  const area = areas.find((a) => a.topic === topic);
   const allYears = useMemo(() => [...new Set(pubs.map((p) => p.year ?? 0))].sort((a, b) => b - a), []);
   const yearOpts = allYears.map((y) => ({ value: String(y), label: y ? String(y) : "Undated", count: pubs.filter((p) => (p.year ?? 0) === y).length }));
   const typeOpts = TYPE_ORDER.map((value) => ({ value, label: TYPE_LABEL[value], count: pubs.filter((p) => p.type === value).length })).filter((o) => o.count);
@@ -38,15 +44,17 @@ export function Publications() {
   const shown = pubs.filter((p) =>
     (!years.size || years.has(String(p.year ?? 0))) &&
     (!types.size || types.has(p.type)) &&
+    (!area || area.keywords.test(`${p.title} ${p.venue}`)) &&
     (!needle || [p.title, p.venue, p.authors.join(" "), p.year, p.label].join(" ").toLowerCase().includes(needle)));
   const order = sort === "oldest" ? [...allYears].reverse() : allYears;
   const groups = order.map((y) => [y, shown.filter((p) => (p.year ?? 0) === y)] as const).filter(([, l]) => l.length);
   const active = [
+    ...(area ? [{ k: "topic", label: area.title, clear: () => setTopic("") }] : []),
     ...(q.trim() ? [{ k: "q", label: `“${q.trim()}”`, clear: () => setQ("") }] : []),
     ...[...years].sort().reverse().map((y) => ({ k: "y" + y, label: y, clear: () => setYears(toggle(years, y)) })),
     ...[...types].map((t) => ({ k: "t" + t, label: TYPE_LABEL[t], clear: () => setTypes(toggle(types, t)) })),
   ];
-  const clearAll = () => { setQ(""); setYears(new Set()); setTypes(new Set()); };
+  const clearAll = () => { setQ(""); setTopic(""); setYears(new Set()); setTypes(new Set()); };
   return (
     <PageLayout title="Publications" wide>
       <div className="filters" role="search">

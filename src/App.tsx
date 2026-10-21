@@ -6,14 +6,20 @@ import { meta } from "./meta";
 import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
 import { Events } from "./pages/Events";
-import { Home } from "./pages/Home";
+import { HomeClassic } from "./pages/Home";
+import { HomeAreas, HomeEditorial } from "./pages/HomeVariants";
+import { HomeBlock, HomeCover, HomeNetwork } from "./pages/HomeBold";
+import { site } from "./data/site";
 import { NotFound } from "./pages/NotFound";
 import { Publications } from "./pages/Publications";
 import { Teaching } from "./pages/Teaching";
 import { Router, useRouter } from "./router";
 
+const HOMES = { classic: HomeClassic, areas: HomeAreas, editorial: HomeEditorial, cover: HomeCover, block: HomeBlock, network: HomeNetwork };
 const PAGES: Record<string, () => React.JSX.Element> = {
-  "/": Home, "/about/": About, "/publications/": Publications, "/teaching/": Teaching, "/talks/": Events, "/contact/": Contact,
+  "/": HOMES[site.homeVariant],
+  // Design previews of the home options (A–E); only present in builds made with VITE_PREVIEW_HOMES=1.
+  ...(import.meta.env.VITE_PREVIEW_HOMES === "1" ? { "/preview/home-a/": HomeAreas, "/preview/home-b/": HomeEditorial, "/preview/home-c/": HomeCover, "/preview/home-d/": HomeBlock, "/preview/home-e/": HomeNetwork } : {}), "/about/": About, "/publications/": Publications, "/teaching/": Teaching, "/talks/": Events, "/contact/": Contact,
 };
 
 function Shell() {
@@ -24,7 +30,7 @@ function Shell() {
     <>
       <a className="skip" href="#main">Skip to content</a>
       <Header />
-      <main id="main" tabIndex={-1}>{path === "/" ? <Page /> : <div className="wrap"><Page /></div>}</main>
+      <main id="main" tabIndex={-1}>{path === "/" || path.startsWith("/preview/") ? <Page /> : <div className="wrap"><Page /></div>}</main>
       <Footer />
     </>
   );

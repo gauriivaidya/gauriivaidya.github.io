@@ -125,6 +125,20 @@ await t("about: short + long bio (third person) with working copy buttons", asyn
   const clip = await page.evaluate(() => navigator.clipboard.readText()); ok(clip.startsWith("Gauri Vaidya is a Senior Postdoctoral Researcher"), "clip " + clip.slice(0, 40));
   await page.click("#long-bio .copy-btn"); await page.locator("#long-bio .copy-btn", { hasText: "Copied" }).waitFor();
   const c2 = await page.evaluate(() => navigator.clipboard.readText()); ok(c2.split("\n\n").length === lp, "long paras copied");
+  eq(lp, 3, "long bio paragraphs"); ok(c2.startsWith("Dr Gauri Vaidya is a Senior Postdoctoral Researcher with the National Kidney Disease Surveillance System at the University of Limerick.") && c2.endsWith("featured by the Business Post, The Times of India, and atoti."), "long bio text " + c2.slice(0, 60));
+  eq(await page.locator('main a[href="/cv.pdf"]').count(), 0, "no CV link on About"); ok(!/\bCV\b/.test(await page.locator("main").textContent()), "no CV text on About");
+});
+await t("tab titles: home 'Dr Gauri Vaidya', others 'Gauri Vaidya | Page' (prerendered + runtime)", async () => {
+  const want = { "/": "Dr Gauri Vaidya", "/about/": "Gauri Vaidya | About", "/publications/": "Gauri Vaidya | Publications", "/teaching/": "Gauri Vaidya | Teaching", "/talks/": "Gauri Vaidya | Talks", "/contact/": "Gauri Vaidya | Contact", "/404.html": "Gauri Vaidya | Page not found" };
+  for (const [r, title] of Object.entries(want)) { ok((await (await page.request.get(B + r)).text()).includes(`<title>${title}</title>`), "prerendered " + r); await page.goto(B + r); eq(await page.title(), title, r); }
+  await page.goto(B + "/"); await page.click(".site-nav >> text=Talks & Events"); await page.waitForURL(B + "/talks/"); eq(await page.title(), "Gauri Vaidya | Talks", "client nav title");
+});
+await t("favicon: svg (pure paths, no text/fonts), 32px png, apple-touch-icon, manifest", async () => {
+  const html = await (await page.request.get(B + "/")).text();
+  for (const h of ['rel="icon" href="/favicon.svg"', 'href="/favicon-32.png"', 'rel="apple-touch-icon" href="/apple-touch-icon.png"', 'rel="manifest" href="/site.webmanifest"']) ok(html.includes(h), h);
+  const svg = await (await page.request.get(B + "/favicon.svg")).text(); ok(svg.includes("<path") && !svg.includes("<text") && !svg.includes("font"), "svg paths only");
+  for (const f of ["/favicon-32.png", "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png"]) { const r = await page.request.get(B + f); eq(r.status(), 200, f); eq(r.headers()["content-type"], "image/png", f); }
+  const m = await (await page.request.get(B + "/site.webmanifest")).json(); eq(m.icons.length, 3, "manifest icons");
 });
 await t("contact: icon buttons, no raw URLs/addresses, booking button", async () => {
   await page.goto(B + "/contact/");
@@ -151,7 +165,7 @@ await t("mobile nav toggle (landing + inner)", async () => {
 });
 await t("SEO meta present", async () => {
   const html = await (await page.request.get(B + "/teaching/")).text();
-  ok(html.includes("<title>Teaching — Gauri Vaidya</title>") && html.includes('og:title') && html.includes('rel="canonical" href="https://gauriivaidya.github.io/teaching/"'), "meta");
+  ok(html.includes("<title>Gauri Vaidya | Teaching</title>") && html.includes('<meta property="og:title" content="Gauri Vaidya | Teaching"') && html.includes('og:title') && html.includes('rel="canonical" href="https://gauriivaidya.github.io/teaching/"'), "meta");
 });
 await t("theme: defaults to system, toggle flips + persists, no flash", async () => {
   const c = await browser.newContext({ colorScheme: "dark" }); const d = await c.newPage();
@@ -190,6 +204,56 @@ await t("navbar logo in Great Vibes, loaded and vertically aligned with nav", as
   ok(r.ff.startsWith('"Great Vibes"'), r.ff); ok(r.loaded, "great vibes loaded"); eq(r.text, "Gauri Vaidya");
   ok(r.dy <= 4, "logo/nav vertical offset " + r.dy); await p3.close();
 });
+if ((await (await page.request.get(B + "/preview/home-a/")).text()).includes("area-list")) {
+  await t("home option A preview: intro + 3 research areas linking to filtered publications + recognitions", async () => {
+    await page.goto(B + "/preview/home-a/"); eq(await page.locator("h1").count(), 1); ok(await page.locator(".landing-hero").isVisible(), "intro");
+    eq(await page.locator(".area").count(), 3, "areas"); eq(await page.locator(".area h3").first().textContent(), "Kidney disease surveillance & health data");
+    eq((await page.locator(".recognitions .rec").allTextContents()).length, 3, "recognitions");
+    ok((await (await page.request.get(B + "/preview/home-a/")).text()).includes('name="robots" content="noindex"'), "noindex");
+    const total = 28; await page.locator(".area", { hasText: "Optimisation" }).locator("a").click(); await page.waitForURL(/topic=optimisation/);
+    const n = await page.locator(".pub").count(); ok(n > 0 && n < total, "filtered " + n); eq(await page.locator(".active-chip").count(), 1, "topic chip");
+    await page.click(".clear-all"); ok(await page.locator(".pub").count() >= total, "cleared");
+    for (const w of [390, 1440]) { await page.setViewportSize({ width: w, height: 900 }); await page.goto(B + "/preview/home-a/"); ok(!(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)), "hscroll " + w); }
+  });
+  await t("home option B preview: editorial hero, Research/Currently, 3 selected pubs from data", async () => {
+    await page.goto(B + "/preview/home-b/"); eq(await page.locator("h1").count(), 1); eq((await page.locator("h1").textContent()).trim(), "Gauri Vaidya");
+    eq((await page.locator(".ed-label").allTextContents()).join("|"), "Research|Currently|Selected publications");
+    eq(await page.locator(".ed-pubs li").count(), 3, "pubs"); ok((await page.locator(".ed-list.plain").textContent()).includes("CS6604"), "currently");
+    await page.locator(".ed-pub-title").first().click(); await page.waitForURL(/publications\/\?q=/); eq(await page.locator(".pub").count(), 1, "pub found");
+    for (const w of [390, 1440]) { await page.setViewportSize({ width: w, height: 900 }); await page.goto(B + "/preview/home-b/"); ok(!(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)), "hscroll " + w); }
+  });
+  const counts = { pubs: 28 };
+  const common = async (r) => {
+    eq((await page.request.get(B + r)).status(), 200, "status " + r); ok((await (await page.request.get(B + r)).text()).includes('name="robots" content="noindex"'), "noindex " + r);
+    await page.goto(B + r); eq(await page.locator("h1").count(), 1); eq((await page.locator("h1").textContent()).replace(/\s+/g, " ").trim(), "Gauri Vaidya");
+    eq(await page.locator("main .pills a").count(), 6, "6 profile links"); ok(await page.locator("main picture img").evaluate((i) => i.complete && i.naturalWidth > 0), "portrait");
+    ok(!(await page.content()).includes("I use data and AI"), "no tagline"); ok(!(await page.locator("main").textContent()).includes("Recent"), "no Recent");
+    for (const w of [390, 1440]) { await page.setViewportSize({ width: w, height: 900 }); await page.goto(B + r); ok(!(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)), "hscroll " + w + r); }
+  };
+  await t("home option C preview: cover split, very large name, real counts link to sections", async () => {
+    await common("/preview/home-c/");
+    const fs = await page.locator(".hc h1").evaluate((e) => parseFloat(getComputedStyle(e).fontSize)); ok(fs >= 72, "name size " + fs);
+    eq(await page.locator(".hc-stats b").first().textContent(), String(counts.pubs), "pub count");
+    await page.locator(".hc-stats a").nth(1).click(); await page.waitForURL(B + "/teaching/");
+  });
+  await t("home option D preview: teal band + numbered index 01-05 with real counts", async () => {
+    await common("/preview/home-d/");
+    eq((await page.locator(".hd-n").allTextContents()).join(), "01,02,03,04,05"); eq((await page.locator(".hd-l").allTextContents()).join("|"), "About|Publications|Teaching|Talks & Events|Contact");
+    ok((await page.locator(".hd-s").nth(1).textContent()).startsWith(counts.pubs + " papers"), "count");
+    const bg = await page.locator(".hd-band").evaluate((e) => getComputedStyle(e).backgroundColor); eq(bg, "rgb(15, 110, 110)", "band teal");
+    await page.locator(".hd-index a", { hasText: "Publications" }).click(); await page.waitForURL(B + "/publications/");
+  });
+  await t("home option E preview: network canvas animates, pauses offscreen, static under reduced motion", async () => {
+    await common("/preview/home-e/");
+    const sig = () => page.evaluate(() => { const c = document.querySelector("canvas.net"); return c.toDataURL().length + ":" + c.toDataURL().slice(-200); });
+    ok(await page.locator("canvas.net").getAttribute("aria-hidden") === "true", "decorative");
+    const a = await sig(); await page.waitForTimeout(400); ok(a !== await sig(), "animates");
+    const rm = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" }); const p = await rm.newPage(); await p.goto(B + "/preview/home-e/");
+    const s1 = await p.evaluate(() => document.querySelector("canvas.net").toDataURL()); await p.waitForTimeout(400); eq(s1 === await p.evaluate(() => document.querySelector("canvas.net").toDataURL()), true, "static when reduced motion");
+    ok(s1.length > 3000, "static frame drawn"); await rm.close();
+  });
+  await t("previews not in sitemap", async () => { ok(!(await (await page.request.get(B + "/sitemap.xml")).text()).includes("preview"), "sitemap"); });
+} else console.log("(preview routes not built — skipping option A/B checks)");
 await t("no console errors", async () => { ok(errors.length === 0, errors.join(" | ")); });
 console.log(`\n${pass} passed, ${fail} failed`);
 await browser.close(); process.exit(fail ? 1 : 0);

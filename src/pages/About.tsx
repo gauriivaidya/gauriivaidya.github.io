@@ -7,7 +7,6 @@ export function About() {
     <PageLayout title="About" intro="Bios for talk introductions, programmes and press. Feel free to copy and use them.">
       <CopyBlock id="short-bio" title="Short bio" paras={shortBio} />
       <CopyBlock id="long-bio" title="Long bio" paras={longBio} />
-      <p className="bio-cv"><a href="/cv.pdf">Download CV (PDF)</a></p>
     </PageLayout>
   );
 }
