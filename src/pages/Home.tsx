@@ -5,7 +5,7 @@ import { site } from "../data/site";
 export function HomeIntro() {
   return (
     <section className="landing-hero" aria-labelledby="name">
-      <Portrait className="hero-avatar" sizes="(max-width: 900px) 96px, 200px" />
+      <Portrait className="hero-avatar" sizes="(max-width: 900px) 132px, 272px" />
       <div>
         <h1 id="name">Gauri Vaidya</h1>
         <p className="hero-role">{site.role}, NKDSS, School of Medicine, University of Limerick</p>

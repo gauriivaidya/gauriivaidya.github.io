@@ -8,7 +8,7 @@ const groups = [...new Set(teaching.map((t) => latest(t.years)))].sort((a, b) =>
 
 export function Teaching() {
   return (
-    <PageLayout title="Teaching" wide intro="I believe in accessible, applied education: helping students build real confidence with data, programming and research methods.">
+    <PageLayout title="Teaching" wide>
       {groups.map(([y, list]) => (
         <section key={y} className="ev-year" aria-labelledby={`ty-${y}`}>
           <h2 id={`ty-${y}`} className="ev-year-h">{y}</h2>

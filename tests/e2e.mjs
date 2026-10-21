@@ -3,6 +3,8 @@ import { chromium } from "playwright-core";
 const B = process.env.BASE ?? "http://localhost:4173";
 const browser = await chromium.launch({ executablePath: process.env.CHROME ?? "/usr/bin/google-chrome", args: ["--no-sandbox"] });
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, permissions: ["clipboard-read", "clipboard-write"] });
+// Safety: never let a test reach the real FormSubmit endpoint (her inbox).
+await ctx.route("https://formsubmit.co/**", (r) => r.abort());
 const page = await ctx.newPage();
 const errors = []; page.on("pageerror", (e) => errors.push(e.message)); page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
 let pass = 0, fail = 0;
@@ -99,11 +101,19 @@ await t("talks: grouped by year desc, rows with thumb/details/links, filters, mo
   eq(await page.locator(".event-row .ev-thumb").count(), total, "thumbs");
   const row = page.locator(".event-row").first(); const [t, bd] = [await row.locator(".ev-thumb").boundingBox(), await row.locator(".ev-body").boundingBox()];
   ok(t.x < bd.x && Math.abs(t.y - bd.y) < 60, "horizontal strip");
-  await page.click(".chip >> text=Invited Talks"); const a = await n(); ok(a > 0 && a < total, "chip " + a);
+  eq(await page.locator(".chip, #ev-year, #ev-sort, select").count(), 0, "old chip/select filters gone");
+  eq(await page.locator("#ev-years input[type=checkbox]").count(), ys.length, "year checkboxes");
+  eq(await page.locator("#ev-years .check, #ev-types .check").evaluateAll((l) => l.every((x) => x.closest(".check-groups"))), true, "same check-groups UI");
+  await page.check('#ev-types input[value="Invited Talks"]'); const a = await n(); ok(a > 0 && a < total, "type " + a);
   ok((await page.locator(".event-row").evaluateAll((e) => e.every((x) => x.dataset.type === "Invited Talks"))), "type");
-  await page.selectOption("#ev-year", "2022"); eq(await page.locator(".ev-year-h").count(), 1, "one year group");
+  await page.check('#ev-types input[value="Workshops"]'); const a2 = await n(); ok(a2 > a, "multi-type OR " + a2);
+  await page.check('#ev-years input[value="2022"]'); eq(await page.locator(".ev-year-h").count(), 1, "one year group");
+  await page.check('#ev-years input[value="2024"]'); eq((await page.locator(".ev-year-h").allTextContents()).join(), "2024,2022", "two years");
   await page.fill("#ev-q", "climate"); eq(await n(), 1, "search");
-  await page.click(".chip >> text=All"); await page.fill("#ev-q", ""); await page.selectOption("#ev-year", "all"); eq(await n(), total);
+  eq(await page.locator(".active-chip").count(), 5, "active chips");
+  await page.locator(".active-chip", { hasText: "Workshops" }).click(); ok(!(await page.isChecked('#ev-types input[value="Workshops"]')), "chip unticks");
+  await page.click(".clear-all"); eq(await n(), total, "cleared"); eq(await page.locator("#ev-years input:checked, #ev-types input:checked").count(), 0); eq(await page.inputValue("#ev-q"), "");
+  ok((await page.locator(".active-bar .count").textContent()).startsWith(`${total} of ${total}`), "count bar");
   await page.setViewportSize({ width: 390, height: 844 });
   const r2 = page.locator(".event-row").first(); const w = await r2.evaluate((e) => getComputedStyle(e).gridTemplateColumns.split(" ").length); eq(w, 2, "mobile columns");
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -112,7 +122,7 @@ await t("teaching: year-grouped strips, latest first, no supervision section", a
   await page.goto(B + "/teaching/");
   const ys = (await page.locator(".ev-year-h").allTextContents()).map(Number); ok(ys.length >= 3 && ys.every((y, i) => i === 0 || y < ys[i - 1]), "years " + ys);
   eq(ys[0], 2026, "latest first"); ok(await page.locator(".strip.teach").count() >= 9, "modules");
-  const txt = await page.locator("main").textContent(); ok(!/supervis|mentoring/i.test(txt), "supervision removed");
+  const txt = await page.locator("main").textContent(); ok(!/supervis|mentoring/i.test(txt), "supervision removed"); ok(!/applied education|real confidence/i.test(txt), "no teaching-philosophy sentence");
   const row = page.locator(".strip.teach").first(); ok((await row.locator(".ev-thumb").boundingBox()).x < (await row.locator(".ev-body").boundingBox()).x, "strip");
 });
 await t("about: short + long bio (third person) with working copy buttons", async () => {
@@ -148,8 +158,84 @@ await t("contact: icon buttons, no raw URLs/addresses, booking button", async ()
   eq(await page.locator('.cbtn[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "work"); eq(await page.locator('.cbtn[href="mailto:gaurivaidya.work@gmail.com"]').count(), 1, "personal");
   eq(await page.locator('.cbtn[href="https://orcid.org/0000-0002-9699-522X"]').count(), 1, "orcid");
   const txt = await page.locator("main").textContent(); ok(!/@|https?:|www\.|\.com|\.ie/.test(txt), "raw url/address visible");
-  const book = page.locator(".book a"); eq((await book.textContent()).trim(), "Book a time with me"); eq(await book.getAttribute("href"), "mailto:gauri.vaidya@ul.ie?subject=Meeting%20request", "booking fallback");
-  eq(await page.locator("form").count(), 0, "no form");
+  const book = page.locator(".book a"); eq((await book.textContent()).trim(), "Book a time with me"); ok((await book.getAttribute("href")).startsWith("mailto:gauri.vaidya@ul.ie?subject=Meeting%20request"), "no-JS mailto fallback");
+  ok(!(await page.locator(".book-dialog").isVisible()), "dialog closed by default");
+});
+await t("publications: Google Scholar button by heading, opens new tab", async () => {
+  await page.goto(B + "/publications/");
+  const a = page.locator(".page-head .page-action a"); eq(await a.count(), 1);
+  eq(await a.getAttribute("href"), "https://scholar.google.com/citations?user=HIo03L4AAAAJ&hl=en"); eq(await a.getAttribute("target"), "_blank");
+  ok((await a.textContent()).includes("Full list on Google Scholar"), "label"); ok((await a.getAttribute("class")).includes("btn"), "button style");
+  const [h, b] = [await page.locator("h1").boundingBox(), await a.boundingBox()]; ok(Math.abs((h.y + h.height / 2) - (b.y + b.height / 2)) < 20, "same row as heading");
+});
+await t("filter counts read as counts (pill + accessible text), identical on publications and talks", async () => {
+  for (const [r, id, noun] of [["/publications/", "#pub-years", "publication"], ["/talks/", "#ev-years", "item"]]) {
+    await page.goto(B + r); const pill = page.locator(`${id} .check-n`).first();
+    const st = await pill.evaluate((e) => { const c = getComputedStyle(e); return { r: parseFloat(c.borderTopLeftRadius), bw: c.borderTopWidth }; });
+    ok(st.r >= 8 && st.bw === "1px", "pill " + r + JSON.stringify(st));
+    ok(new RegExp(`^\\d+ ${noun}s?$`).test(await pill.getAttribute("title")), "title " + await pill.getAttribute("title"));
+    ok(/\(\d+ (publication|item)s?\)/.test(await pill.locator(".sr-only").textContent()), "sr text");
+    const lbl = await page.locator(`${id} .check`).first().evaluate((e) => e.innerText.replace(/\s+/g, " ").trim()); ok(/^\d{4} \d+$/.test(lbl) || /^\d{4} \d+ \(/.test(lbl), "label " + lbl);
+  }
+});
+await t("home portrait larger (272px desktop, 132px mobile) and sharp source chosen", async () => {
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+  await p.goto(B + "/", { waitUntil: "networkidle" }); const r = await p.locator(".hero-avatar img").evaluate((i) => ({ w: i.getBoundingClientRect().width, src: i.currentSrc, nw: i.naturalWidth }));
+  eq(Math.round(r.w), 272, "desktop size"); ok(/portrait-340\.(avif|webp)$/.test(r.src), "largest source " + r.src);
+  await p.setViewportSize({ width: 390, height: 844 }); await p.goto(B + "/"); eq(Math.round(await p.locator(".hero-avatar img").evaluate((i) => i.getBoundingClientRect().width)), 132, "mobile size");
+  ok(!(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth)), "mobile hscroll"); await p.close();
+});
+await t("booking form: opens as modal, fields + labels, Escape closes and returns focus, validation", async () => {
+  const c = await browser.newContext({ viewport: { width: 1440, height: 900 } }); const p = await c.newPage();
+  const sent = []; await c.route("https://formsubmit.co/**", (r) => { sent.push(r.request()); return r.abort(); });
+  await p.goto(B + "/contact/"); await p.click(".book a"); const d = p.locator(".book-dialog"); ok(await d.isVisible(), "open");
+  eq(await d.evaluate((e) => e.open && e.matches(":modal")), true, "modal");
+  eq(p.url(), B + "/contact/", "mailto not followed");
+  for (const [id, lab] of [["bf-name", "Name"], ["bf-email", "Email"], ["bf-topic", "What it's about"], ["bf-times", "Preferred times"], ["bf-msg", "Message (optional)"]]) eq((await p.locator(`label[for=${id}]`).textContent()).trim(), lab, id);
+  eq((await p.locator("#bf-topic option:not([disabled])").allTextContents()).join("|"), "Research collaboration|Student/supervision enquiry|Talk or event invitation|Other", "topics");
+  for (const id of ["bf-name", "bf-email", "bf-topic", "bf-times"]) eq(await p.locator("#" + id).getAttribute("required"), "", "required " + id);
+  eq(await p.locator("#bf-msg").getAttribute("required"), null, "message optional");
+  ok(!(await p.locator("#bf-hp").isVisible()) || (await p.locator("#bf-hp").boundingBox()).x < 0, "honeypot hidden"); eq(await p.locator("#bf-hp").getAttribute("tabindex"), "-1");
+  ok(await p.evaluate(() => document.activeElement.id === "bf-name" || document.querySelector(".book-dialog").contains(document.activeElement)), "focus inside");
+  await p.click(".bf-actions button[type=submit]"); ok(await d.isVisible(), "invalid form stays open"); eq(sent.length, 0, "nothing sent when invalid");
+  await p.keyboard.press("Escape"); ok(!(await d.isVisible()), "escape closes");
+  eq(await p.evaluate(() => document.activeElement.textContent.trim()), "Book a time with me", "focus returned");
+  await p.click(".book a"); await p.click(".book-x"); ok(!(await d.isVisible()), "× closes"); await c.close();
+});
+const fillForm = async (p) => { await p.fill("#bf-name", "Test Person"); await p.fill("#bf-email", "test@example.org"); await p.selectOption("#bf-topic", "Research collaboration"); await p.fill("#bf-times", "Tue afternoon"); await p.fill("#bf-msg", "Hello"); };
+await t("booking form: posts to FormSubmit AJAX (mocked) with subject/template/captcha, shows success", async () => {
+  const c = await browser.newContext(); const p = await c.newPage(); let req = null;
+  await c.route("https://formsubmit.co/**", async (r) => { req = r.request(); await new Promise((z) => setTimeout(z, 150)); return r.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: '{"success":"true","message":"The form was submitted successfully."}' }); });
+  await p.goto(B + "/contact/"); await p.click(".book a"); await fillForm(p);
+  await p.click(".bf-actions button[type=submit]"); await p.locator(".bf-actions button", { hasText: "Sending…" }).waitFor();
+  await p.locator(".book-ok").waitFor(); ok((await p.locator(".book-ok").textContent()).includes("sent"), "success text");
+  eq(req.url(), "https://formsubmit.co/ajax/gauri.vaidya@ul.ie"); eq(req.method(), "POST"); eq(req.headers()["accept"], "application/json");
+  const b = JSON.parse(req.postData()); eq(b._subject, "Meeting request from website"); eq(b._template, "table"); eq(b._captcha, "false");
+  eq(b.name, "Test Person"); eq(b.email, "test@example.org"); eq(b.topic, "Research collaboration"); eq(b["preferred times"], "Tue afternoon"); eq(b.message, "Hello"); eq(b._honey, "");
+  await p.click(".book-done button"); ok(!(await p.locator(".book-dialog").isVisible()), "closed");
+  await p.click(".book a"); ok(await p.locator("#bf-name").isVisible(), "fresh form on reopen"); eq(await p.inputValue("#bf-name"), "", "reset"); await c.close();
+});
+await t("booking form: network error shows error + prefilled mailto fallback; FormSubmit refusal too", async () => {
+  const c = await browser.newContext(); const p = await c.newPage();
+  await c.route("https://formsubmit.co/**", (r) => r.abort("internetdisconnected"));
+  await p.goto(B + "/contact/"); await p.click(".book a"); await fillForm(p); await p.click(".bf-actions button[type=submit]");
+  const err = p.locator(".book-err[role=alert]"); await err.waitFor(); const href = await err.locator("a").getAttribute("href");
+  ok(href.startsWith("mailto:gauri.vaidya@ul.ie?subject=Meeting%20request&body="), "fallback " + href.slice(0, 60));
+  const body = decodeURIComponent(href.split("body=")[1]); ok(body.includes("Name: Test Person") && body.includes("Preferred times: Tue afternoon") && body.includes("Hello"), "prefilled");
+  eq(await p.inputValue("#bf-name"), "Test Person", "input kept");
+  await c.unroute("https://formsubmit.co/**"); await c.route("https://formsubmit.co/**", (r) => r.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: '{"success":"false","message":"This form needs Activation."}' }));
+  await p.click(".bf-actions button[type=submit]"); await p.waitForTimeout(300); ok(await err.isVisible(), "refusal → error"); eq(await p.locator(".book-ok").count(), 0); await c.close();
+});
+await t("booking form: honeypot filled → fake success, nothing sent", async () => {
+  const c = await browser.newContext(); const p = await c.newPage(); let n = 0; await c.route("https://formsubmit.co/**", (r) => { n++; return r.abort(); });
+  await p.goto(B + "/contact/"); await p.click(".book a"); await fillForm(p); await p.locator("#bf-hp").evaluate((e) => { e.value = "spam"; });
+  await p.click(".bf-actions button[type=submit]"); await p.locator(".book-ok").waitFor(); eq(n, 0, "no request"); await c.close();
+});
+await t("booking dialog: dark mode colours + mobile fits", async () => {
+  const c = await browser.newContext({ colorScheme: "dark", viewport: { width: 390, height: 844 } }); const p = await c.newPage(); await c.route("https://formsubmit.co/**", (r) => r.abort());
+  await p.goto(B + "/contact/"); await p.click(".book a");
+  eq(await p.locator(".book-dialog").evaluate((e) => getComputedStyle(e).backgroundColor), "rgb(17, 17, 16)", "dark bg");
+  const bb = await p.locator(".book-dialog").boundingBox(); ok(bb.x >= 0 && bb.x + bb.width <= 390, "fits width"); await c.close();
 });
 await t("footer text", async () => { eq((await page.locator(".site-footer").textContent()).trim(), `Made with ❤️ · © ${new Date().getFullYear()} Gauri Vaidya`); });
 await t("mobile nav toggle (landing + inner)", async () => {

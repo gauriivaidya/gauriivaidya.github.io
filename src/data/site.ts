@@ -26,11 +26,6 @@ export const site = {
     orcid: "https://orcid.org/0000-0002-9699-522X" as string,
   },
   /**
-   * "Book a time with me" target (e.g. a Calendly / Google Calendar booking page).
-   * While empty, the button opens an email to the work address with subject "Meeting request".
-   */
-  bookingUrl: "" as string,
-  /**
    * Which home page design is live: "classic" (centred intro only), "areas" (option A), "editorial" (option B),
    * "cover" (option C: portrait panel + very large name), "block" (option D: teal band + numbered index) or
    * "network" (option E: big name over a faint animated data network). Change this one word and rebuild.

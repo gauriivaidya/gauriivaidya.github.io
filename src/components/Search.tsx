@@ -17,13 +17,3 @@ export function Select({ id, label, value, onChange, options }: { id: string; la
     </div>
   );
 }
-
-export function Chips({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
-  return (
-    <div className="chips" role="group" aria-label={label}>
-      {["All", ...options].map((o) => (
-        <button key={o} type="button" className="chip" aria-pressed={value === o} onClick={() => onChange(o)}>{o}</button>
-      ))}
-    </div>
-  );
-}
