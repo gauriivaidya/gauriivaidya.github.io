@@ -1,0 +1,43 @@
+{
+  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), slides, video, project, paper. Only add verified URLs.",
+  "oconnor2024hip": {
+    "type": "preprint",
+    "paper": "https://arxiv.org/abs/2410.12804"
+  },
+  "yao2021bioinspired": {
+    "type": "other",
+    "label": "Extended abstract"
+  },
+  "kshirsagar2024hnscc": {
+    "type": "other",
+    "label": "Abstract"
+  },
+  "kshirsagar2023scmarkerbase": {
+    "type": "other",
+    "label": "Abstract"
+  },
+  "kshirsagar2023annotation": {
+    "type": "other",
+    "label": "Abstract"
+  },
+  "vaidya2024hyperge": {
+    "type": "other",
+    "label": "Poster"
+  },
+  "vaidya2023gehp": {
+    "type": "other",
+    "label": "Poster"
+  },
+  "kshirsagar2022digitalhealth": {
+    "type": "other",
+    "label": "Poster"
+  },
+  "vaidya2025thesis": {
+    "type": "other",
+    "label": "PhD thesis"
+  },
+  "oconnor2026bigdata": {
+    "type": "other",
+    "label": "Abstract"
+  }
+}
