@@ -3,6 +3,7 @@ import { ActiveBar, CheckList, toggle } from "../components/CheckList";
 import { EventRow } from "../components/EventCard";
 import { PageLayout } from "../components/PageLayout";
 import { Search } from "../components/Search";
+import { YearGroup } from "../components/YearGroup";
 import { EVENT_TYPES, events } from "../data/events";
 
 const NOUN: [string, string] = ["item", "items"];
@@ -37,10 +38,7 @@ export function Events() {
       </div>
       <ActiveBar shown={shown.length} total={events.length} noun="items" active={active} clearAll={clearAll} />
       {groups.length ? groups.map(([y, list]) => (
-        <section key={y} className="ev-year" aria-labelledby={`y-${y}`}>
-          <h2 id={`y-${y}`} className="ev-year-h">{y}</h2>
-          <ul className="event-list">{list.map((e) => <EventRow key={e.id} e={e} />)}</ul>
-        </section>
+        <YearGroup key={y} id={`y-${y}`} year={y}>{list.map((e) => <EventRow key={e.id} e={e} />)}</YearGroup>
       )) : <p className="empty">Nothing here yet for these filters.</p>}
     </PageLayout>
   );

@@ -1,28 +1,18 @@
 import type { EventItem } from "../data/events";
+import { Row } from "./YearGroup";
 
-const INITIALS: Record<string, string> = { "Invited Talks": "Talk", "Conference Presentations": "Conf.", Workshops: "Workshop", Panels: "Panel", "Media Appearances": "Media", "Awards / Recognition": "Award", "Other Events": "Event" };
+const SHORT: Record<string, string> = { "Invited Talks": "Talk", "Conference Presentations": "Conference", Workshops: "Workshop", Panels: "Panel", "Media Appearances": "Media", "Awards / Recognition": "Award", "Other Events": "Event" };
 
+/** One talk/event: type badge · title · date/host/place/role · description · link. */
 export function EventRow({ e }: { e: EventItem }) {
   return (
-    <li className="event-row" data-type={e.type}>
-      <div className="ev-thumb">
-        {e.image ? <img src={e.image} alt={e.imageAlt ?? ""} loading="lazy" decoding="async" width="132" height="88" />
-          : <div className="ev-ph" aria-hidden="true"><span>{INITIALS[e.type] ?? "Event"}</span></div>}
-      </div>
-      <div className="ev-body">
-        <p className="event-type">{e.type}</p>
-        <h3 className="event-title">{e.title}</h3>
-        <p className="event-meta">
-          <span>{e.date}</span>
-          {e.host && <span>{e.host}</span>}
-          {e.location && <span>{e.location}</span>}
-          {e.role && <span className="ev-role">{e.role}</span>}
-        </p>
-        {e.description && <p className="event-desc">{e.description}</p>}
-      </div>
-      <div className="ev-links">
-        {e.link ? <a href={e.link.url} target="_blank" rel="noopener noreferrer">{e.link.label} →</a> : null}
-      </div>
-    </li>
+    <Row className="event-row" badge={SHORT[e.type] ?? "Event"} title={e.type} data-type={e.type}>
+      <h3 className="row-title">{e.title}</h3>
+      <p className="row-meta">
+        <span>{e.date}</span>{e.host && <span>{e.host}</span>}{e.location && <span>{e.location}</span>}{e.role && <span className="ev-role">{e.role}</span>}
+      </p>
+      {e.description && <p className="row-desc">{e.description}</p>}
+      {e.link && <div className="pub-links"><a className="act" href={e.link.url} target="_blank" rel="noopener noreferrer">{e.link.label}</a></div>}
+    </Row>
   );
 }

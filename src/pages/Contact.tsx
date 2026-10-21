@@ -12,7 +12,7 @@ export function Contact() {
     { label: "ORCID", href: c.orcid, icon: "orcid" },
     { label: "GitHub", href: c.github, icon: "github" },
     { label: "LinkedIn", href: c.linkedin, icon: "linkedin" },
-    { label: "CV", href: "/cv.pdf", icon: "file" },
+    { label: "CV", href: "/cv/", icon: "file" },
   ];
   const ext = (h: string) => (h.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {});
   return (

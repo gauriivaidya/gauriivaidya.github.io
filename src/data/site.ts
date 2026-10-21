@@ -6,8 +6,6 @@ export const PLACEHOLDER = "PLACEHOLDER" as const;
 
 export const site = {
   name: "Gauri Vaidya",
-  /** Homepage hero sentence — edit freely. */
-  heroText: "I use data and AI to improve health systems, build reliable models, and turn research into real-world impact.",
   /** Confirmed by Gauri (Oct 2026). */
   role: "Senior Postdoctoral Researcher",
   affiliation: "National Kidney Disease Surveillance System (NKDSS), School of Medicine, University of Limerick",
@@ -25,12 +23,8 @@ export const site = {
     /** Verified. */
     orcid: "https://orcid.org/0000-0002-9699-522X" as string,
   },
-  /**
-   * Which home page design is live: "classic" (centred intro only), "areas" (option A), "editorial" (option B),
-   * "cover" (option C: portrait panel + very large name), "block" (option D: teal band + numbered index) or
-   * "network" (option E: big name over a faint animated data network). Change this one word and rebuild.
-   */
-  homeVariant: "classic" as "classic" | "areas" | "editorial" | "cover" | "block" | "network",
+  /** Shown under the portrait on the home page (al-folio "more info" block). */
+  address: ["National Kidney Disease Surveillance System", "School of Medicine", "University of Limerick", "Limerick, Ireland"],
 };
 
 export const isSet = (v: string) => v && v !== PLACEHOLDER;

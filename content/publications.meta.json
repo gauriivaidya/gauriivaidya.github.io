@@ -1,43 +1,111 @@
 {
-  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), label, link (paper page), pdf, doi (bare, e.g. 10.1000/xyz), video, slides, project. A button is shown only when a URL is set. Only add verified URLs.",
-  "oconnor2024hip": {
-    "type": "preprint",
-    "link": "https://arxiv.org/abs/2410.12804"
+  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), label, abbr (venue abbreviation shown as the badge), selected (true = listed under 'Selected publications' on the home page), abstract, link (paper page), pdf, doi (bare, e.g. 10.1000/xyz), code, video, slides, project. A button is shown only when a URL or abstract is set. Only add verified URLs.",
+  "bindra2021insights": {
+    "abbr": "SCI"
   },
-  "yao2021bioinspired": {
-    "type": "other",
-    "label": "Extended abstract"
+  "chen2026nl2code": {
+    "abbr": "ICAART"
   },
-  "kshirsagar2024hnscc": {
-    "type": "other",
-    "label": "Abstract"
-  },
-  "kshirsagar2023scmarkerbase": {
-    "type": "other",
-    "label": "Abstract"
-  },
-  "kshirsagar2023annotation": {
-    "type": "other",
-    "label": "Abstract"
-  },
-  "vaidya2024hyperge": {
-    "type": "other",
-    "label": "Poster"
-  },
-  "vaidya2023gehp": {
-    "type": "other",
-    "label": "Poster"
+  "kshirsagar2022decart": {
+    "abbr": "SMARTGREENS"
   },
   "kshirsagar2022digitalhealth": {
     "type": "other",
-    "label": "Poster"
+    "label": "Poster",
+    "abbr": "Poster"
   },
-  "vaidya2025thesis": {
+  "kshirsagar2022trustworthiness": {
+    "abbr": "IJNCR"
+  },
+  "kshirsagar2023annotation": {
     "type": "other",
-    "label": "PhD thesis"
+    "label": "Abstract",
+    "abbr": "BioC"
+  },
+  "kshirsagar2023scmarkerbase": {
+    "type": "other",
+    "label": "Abstract",
+    "abbr": "InCoB"
+  },
+  "kshirsagar2023sensible": {
+    "abbr": "Eng. Rep."
+  },
+  "kshirsagar2024hnscc": {
+    "type": "other",
+    "label": "Abstract",
+    "abbr": "BioC"
+  },
+  "kshirsagar2025bias": {
+    "abbr": "ICAART",
+    "selected": true
+  },
+  "kshirsagar2025webtool": {
+    "abbr": "ICAART"
+  },
+  "kumar2026synthetic": {
+    "abbr": "AICS"
+  },
+  "nagori2020multichain": {
+    "abbr": "SmartCom"
+  },
+  "oconnor2024hip": {
+    "type": "preprint",
+    "link": "https://arxiv.org/abs/2410.12804",
+    "abbr": "arXiv"
   },
   "oconnor2026bigdata": {
     "type": "other",
-    "label": "Abstract"
+    "label": "Abstract",
+    "abbr": "EMJ"
+  },
+  "ryan2022prng": {
+    "abbr": "Sci. Rep.",
+    "selected": true
+  },
+  "urban2025datapulse": {
+    "abbr": "DATA"
+  },
+  "vaidya2020privacy": {
+    "abbr": "Chapter"
+  },
+  "vaidya2022hyperestimator": {
+    "abbr": "ICSBT"
+  },
+  "vaidya2023gehp": {
+    "type": "other",
+    "label": "Poster",
+    "abbr": "Poster"
+  },
+  "vaidya2023grammatical": {
+    "abbr": "Algorithms",
+    "selected": true
+  },
+  "vaidya2024hyperge": {
+    "type": "other",
+    "label": "Poster",
+    "abbr": "Poster"
+  },
+  "vaidya2025purge": {
+    "abbr": "ICAART",
+    "selected": true
+  },
+  "vaidya2025resource": {
+    "abbr": "ICAART"
+  },
+  "vaidya2025thesis": {
+    "type": "other",
+    "label": "PhD thesis",
+    "abbr": "PhD Thesis"
+  },
+  "yao2021bioinspired": {
+    "type": "other",
+    "label": "Extended abstract",
+    "abbr": "Evo*"
+  },
+  "yao2021convergence": {
+    "abbr": "Front. Blockchain"
+  },
+  "yao2024knowledge": {
+    "abbr": "Chapter"
   }
 }

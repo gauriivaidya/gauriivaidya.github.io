@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
-const { render, meta, ROUTE_PATHS, PREVIEW_PATHS } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.js")).href);
+const { render, meta, ROUTE_PATHS, ALIASES } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.js")).href);
 const template = readFileSync(join(dist, "index.html"), "utf8");
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
@@ -23,9 +23,10 @@ for (const p of ROUTE_PATHS) {
   writeFileSync(out, page(p));
   console.log("prerendered", p);
 }
-if (process.env.VITE_PREVIEW_HOMES === "1") for (const p of PREVIEW_PATHS) {
-  const out = join(dist, p, "index.html"); mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, page(p, true)); console.log("prerendered preview", p);
+// Aliases (e.g. /about/ → /): same page, canonical points at the target; the client then rewrites the URL.
+for (const [from, to] of Object.entries(ALIASES)) {
+  const out = join(dist, from, "index.html"); mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, page(to)); console.log("prerendered alias", from, "→", to);
 }
 writeFileSync(join(dist, "404.html"), page("/__not-found__/", true));
 const base = "https://gauriivaidya.github.io";

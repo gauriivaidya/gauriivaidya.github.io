@@ -1,14 +1,17 @@
 import { site } from "../data/site";
-export function ProfileLinks({ className }: { className: string }) {
+import { Icon } from "./Icons";
+
+/** al-folio-style row of social icons (bottom of the home page). */
+export function SocialRow() {
   const c = site.contact;
   const links = [
-    ["Email", `mailto:${c.workEmail}`], ["Google Scholar", c.scholar], ["GitHub", c.github],
-    ["LinkedIn", c.linkedin], ["ORCID", c.orcid], ["CV", "/cv.pdf"],
+    ["Email", `mailto:${c.workEmail}`, "mail"], ["Google Scholar", c.scholar, "scholar"], ["ORCID", c.orcid, "orcid"],
+    ["GitHub", c.github, "github"], ["LinkedIn", c.linkedin, "linkedin"], ["CV", "/cv/", "file"],
   ];
   return (
-    <ul className={className}>
-      {links.map(([label, href]) => (
-        <li key={label}><a href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{label}</a></li>
+    <ul className="social">
+      {links.map(([label, href, icon]) => (
+        <li key={label}><a href={href} aria-label={label} title={label} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}><Icon name={icon} /></a></li>
       ))}
     </ul>
   );

@@ -1,5 +1,6 @@
 import { PageLayout } from "../components/PageLayout";
 import { TeachingRecord } from "../components/TeachingRecord";
+import { YearGroup } from "../components/YearGroup";
 import { teaching } from "../data/teaching";
 
 const latest = (years: string) => Math.max(...(years.match(/\d{4}/g) ?? ["0"]).map(Number));
@@ -10,10 +11,7 @@ export function Teaching() {
   return (
     <PageLayout title="Teaching" wide>
       {groups.map(([y, list]) => (
-        <section key={y} className="ev-year" aria-labelledby={`ty-${y}`}>
-          <h2 id={`ty-${y}`} className="ev-year-h">{y}</h2>
-          <ul className="strip-list">{list.map((t) => <TeachingRecord key={`${t.code ?? t.name}-${t.years}`} t={t} />)}</ul>
-        </section>
+        <YearGroup key={y} id={`ty-${y}`} year={y}>{list.map((t) => <TeachingRecord key={`${t.code ?? t.name}-${t.years}`} t={t} />)}</YearGroup>
       ))}
     </PageLayout>
   );

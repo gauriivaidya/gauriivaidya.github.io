@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { PageLayout } from "../components/PageLayout";
 import { PublicationEntry, TYPE_LABEL } from "../components/PublicationEntry";
 import { Search, Select } from "../components/Search";
+import { YearGroup } from "../components/YearGroup";
 import data from "../data/publications.json";
 import type { Publication } from "../data/types";
 import { areas } from "../data/home";
@@ -52,10 +53,7 @@ export function Publications() {
       </div>
       <ActiveBar shown={shown.length} total={pubs.length} noun="publications" active={active} clearAll={clearAll} />
       {groups.length ? groups.map(([y, list]) => (
-        <section key={y} className="ev-year" aria-labelledby={`py-${y}`}>
-          <h2 id={`py-${y}`} className="ev-year-h">{y || "Undated"}</h2>
-          <ol className="strip-list">{list.map((p) => <PublicationEntry key={p.key} pub={p} />)}</ol>
-        </section>
+        <YearGroup key={y} id={`py-${y}`} year={y || "Undated"}>{list.map((p) => <PublicationEntry key={p.key} pub={p} />)}</YearGroup>
       )) : <p className="empty">No publications match these filters.</p>}
     </PageLayout>
   );

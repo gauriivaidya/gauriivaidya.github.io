@@ -21,14 +21,10 @@ Push to `main` of the repo **gauriivaidya.github.io**. In *Settings → Pages* c
 | Teaching | `src/data/teaching.ts` — add an object (code, name, years, institution, role, description, optional `resources`). |
 | Events & Media | `src/data/events.ts` — add an item; put real photos in `public/images/events/` and set `image`/`imageAlt`. Without an image a neutral placeholder is drawn. |
 | Contact links, hero sentence, role | `src/data/site.ts`. Values set to `PLACEHOLDER` show as “To be added”. |
-| About text | `src/pages/About.tsx` |
-| Portrait | replace the `.portrait-ph` block in `src/pages/About.tsx` with an `<img>` |
-| CV | `public/cv.pdf` |
-
-## Home page design
-`src/data/site.ts` → `homeVariant`: `"classic"` (centred intro, live default), `"areas"` (option A: research areas + recognitions) or `"editorial"` (option B). Content for A/B lives in `src/data/home.ts`.
-To preview both without changing the default: `VITE_PREVIEW_HOMES=1 npm run build && npm run preview`, then open `/preview/home-a/` and `/preview/home-b/` (noindex, not in sitemap, not built in normal/CI builds).
-Research-area links use `/publications/?topic=health|trustworthy-ai|optimisation` (keyword filter in `home.ts`).
+| Home = About (al-folio profile) | bio text in `src/data/bio.ts`; address under the portrait in `src/data/site.ts` (`address`); selected papers = `"selected": true` in `content/publications.meta.json` |
+| Venue badges / abstracts | `"abbr"` and `"abstract"` per key in `content/publications.meta.json` (an ABS button appears only when an abstract exists) |
+| `/about/` | alias of `/` (prerendered with canonical `/`, URL rewritten client-side) |
+| CV | `public/cv.pdf` — shown on `/cv/` (embedded on desktop, download/open buttons everywhere) |
 
 ## Logo / favicon
 Sources: `brand/option-{a,b,c}.svg`, generated as pure SVG paths from the self-hosted fonts by `python3 scripts/make-logos.py` (needs `fonttools` + `brotli`).

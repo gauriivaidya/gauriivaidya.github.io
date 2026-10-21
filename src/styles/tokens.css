@@ -4,12 +4,12 @@
 :root{
   color-scheme:light;
   --bg:#FAFAF7;--bg-2:#F3F2EE;--pill:#FFFFFF;--text:#1C1B19;--text-2:#57534D;--line:#E6E4DE;
-  --accent:#0F6E6E;--on-accent:#FFFFFF;--accent-soft:#E3F0EE;--accent-line:#C9E1DD;
+  --accent:#0F6E6E;--on-accent:#FFFFFF;--accent-soft:#E3F0EE;--accent-line:#C9E1DD;--year:#5A9690;
   --font-head:"Montserrat",system-ui,sans-serif;--font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --measure:760px;--gutter:clamp(20px,5vw,48px);--header-h:72px;
 }
 :root[data-theme=dark]{
   color-scheme:dark;
   --bg:#111110;--bg-2:#1A1A18;--pill:#1C1C1A;--text:#ECEBE7;--text-2:#A8A49C;--line:#2B2A27;
-  --accent:#5FB3AA;--on-accent:#111110;--accent-soft:#142624;--accent-line:#24433F;
+  --accent:#5FB3AA;--on-accent:#111110;--accent-soft:#142624;--accent-line:#24433F;--year:#3F7D77;
 }

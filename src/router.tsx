@@ -1,17 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useState, type AnchorHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
-export const ROUTES = [
-  { path: "/", label: "Home" },
-  { path: "/about/", label: "About" },
-  { path: "/publications/", label: "Publications" },
-  { path: "/teaching/", label: "Teaching" },
-  { path: "/talks/", label: "Talks & Events" },
-  { path: "/contact/", label: "Contact" },
-] as const;
+/** Old URLs that now show another page (home = About, as in al-folio). */
+export const ALIASES: Record<string, string> = { "/about/": "/" };
 
 export const normalize = (p: string) => {
   const clean = p.split(/[?#]/)[0] || "/";
-  return clean.endsWith("/") ? clean : clean + "/";
+  const n = clean.endsWith("/") ? clean : clean + "/";
+  return ALIASES[n] ?? n;
 };
 
 type Ctx = { path: string; navigate: (to: string) => void };
@@ -20,6 +15,7 @@ const RouterCtx = createContext<Ctx>({ path: "/", navigate: () => {} });
 export function Router({ initialPath, children }: { initialPath: string; children: ReactNode }) {
   const [path, setPath] = useState(normalize(initialPath));
   useEffect(() => {
+    if (normalize(location.pathname) !== location.pathname) history.replaceState({}, "", normalize(location.pathname) + location.search + location.hash);
     const onPop = () => setPath(normalize(window.location.pathname));
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
