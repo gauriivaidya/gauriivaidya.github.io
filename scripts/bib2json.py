@@ -81,8 +81,8 @@ def main():
             "year": int(f["year"]) if f.get("year", "").isdigit() else None,
             "volume": f.get("volume"), "issue": f.get("number") or f.get("issue"),
             "pages": clean(f["pages"]) if f.get("pages") else None,
-            "doi": f.get("doi"), "url": f.get("url") or m.get("paper"),
-            "slides": m.get("slides"), "video": m.get("video"), "project": m.get("project"),
+            "doi": f.get("doi") or m.get("doi"), "url": f.get("url") or m.get("link") or m.get("paper"),
+            "pdf": m.get("pdf"), "slides": m.get("slides"), "video": m.get("video"), "project": m.get("project"),
             "bibtex": raw.strip(),
         })
     pubs.sort(key=lambda p: (-(p["year"] or 0), p["title"]))

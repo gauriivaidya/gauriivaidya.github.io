@@ -16,7 +16,7 @@ export function Events() {
     (!needle || [e.title, e.host, e.location, e.role, e.description, e.type].join(" ").toLowerCase().includes(needle)));
   const groups = years.map((y) => [y, shown.filter((e) => e.year === y)] as const).filter(([, l]) => l.length);
   return (
-    <PageLayout title="Talks & Events">
+    <PageLayout title="Talks & Events" wide>
       <div className="filters" role="search">
         <Search id="ev-q" label="Search" value={q} onChange={setQ} placeholder="Talk, host, place…" />
         <Select id="ev-year" label="Year" value={year} onChange={setYear} options={[{ value: "all", label: "All years" }, ...years.map((y) => ({ value: String(y), label: String(y) }))]} />

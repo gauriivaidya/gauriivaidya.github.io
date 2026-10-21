@@ -12,6 +12,7 @@ export type Publication = {
   pages?: string | null;
   doi?: string | null;
   url?: string | null;
+  pdf?: string | null;
   slides?: string | null;
   video?: string | null;
   project?: string | null;

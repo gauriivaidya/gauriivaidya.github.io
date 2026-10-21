@@ -28,13 +28,13 @@ await t("header nav client-side navigation", async () => {
   await page.waitForURL(B + "/publications/"); eq((await page.locator("h1").textContent()).trim(), "Publications");
   await page.goBack(); await page.waitForURL(B + "/"); ok(await page.locator(".landing-hero").isVisible(), "home after back");
 });
-await t("home landing: name, role, intro, 5 links, recent, no tagline", async () => {
+await t("home landing: name, role, intro, 6 links, no Recent section, no tagline", async () => {
   await page.goto(B + "/");
   eq((await page.locator("h1").textContent()).trim(), "Gauri Vaidya");
   ok((await page.locator(".hero-role").textContent()).startsWith("Senior Postdoctoral Researcher, NKDSS, School of Medicine, University of Limerick"), "role");
   eq(await page.locator(".pills a").count(), 6, "links"); eq(await page.locator('.pills a[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "work email"); eq(await page.locator('.pills a[href="https://orcid.org/0000-0002-9699-522X"]').count(), 1, "orcid");
   const img = page.locator(".hero-avatar img"); ok(await img.evaluate((i) => i.complete && i.naturalWidth > 0), "portrait loaded"); ok(/\.(avif|webp)$/.test(await img.evaluate((i) => i.currentSrc)), "modern format " + await img.evaluate((i) => i.currentSrc)); eq(await page.locator('.pills a[href="/cv.pdf"]').count(), 1, "cv");
-  const r = await page.locator(".recent li").count(); ok(r >= 4 && r <= 5, "recent " + r);
+  eq(await page.locator(".recent, #recent-h").count(), 0, "recent removed"); ok(!(await page.locator("main").textContent()).includes("Recent"), "no Recent text");
   ok(!(await page.content()).includes("I use data and AI"), "no tagline");
   eq(await page.locator(".sidebar").count(), 0, "no sidebar on landing");
 });
@@ -54,21 +54,34 @@ await t("publications: her name bold, query param prefill", async () => {
   eq(await page.inputValue("#pub-q"), "hyperparameter");
   ok((await page.locator(".pub-authors .me").first().evaluate((e) => Number(getComputedStyle(e).fontWeight))) >= 600, "bold");
 });
-await t("publications: multi-select years + types with search, sort, active chips, clear all", async () => {
+await t("publications: checkbox years + types with search, sort, active chips, clear all, grouped by year", async () => {
   await page.goto(B + "/publications/");
   const n = () => page.locator(".pub").count(); const total = await n(); ok(total >= 28, "total " + total);
-  await page.click('#pub-years .chip[data-value="2025"]'); await page.click('#pub-years .chip[data-value="2026"]');
+  const hy = async () => (await page.locator(".ev-year-h").allTextContents()).map(Number);
+  let ys = await hy(); ok(ys.length > 3 && ys.every((y, i) => i === 0 || y < ys[i - 1]), "year groups desc " + ys);
+  eq(await page.locator('#pub-years input[type=checkbox]').count(), ys.length, "year checkboxes");
+  await page.check('#pub-years input[value="2025"]'); await page.check('#pub-years input[value="2026"]');
   const a = await n(); ok((await page.locator(".pub").evaluateAll((e) => e.every((x) => ["2025", "2026"].includes(x.dataset.year)))), "years"); ok(a > 0 && a < total, "a " + a);
-  await page.click('#pub-types .chip[data-value="conference"]'); await page.click('#pub-types .chip[data-value="other"]');
+  eq((await hy()).join(), "2026,2025", "groups follow filter");
+  await page.check('#pub-types input[value="conference"]'); await page.check('#pub-types input[value="other"]');
   const b = await n(); ok(b > 0 && b <= a && (await page.locator(".pub").evaluateAll((e) => e.every((x) => ["conference", "other"].includes(x.dataset.type)))), "types " + b);
   await page.fill("#pub-q", "hyperparameter"); const c = await n(); ok(c > 0 && c <= b, "search " + c);
   eq(await page.locator(".active-chip").count(), 5, "active chips");
-  await page.locator(".active-chip", { hasText: "2026" }).click(); eq(await page.locator('#pub-years .chip[data-value="2026"]').getAttribute("aria-pressed"), "false", "chip removed");
-  await page.selectOption("#pub-sort", "oldest");
+  await page.locator(".active-chip", { hasText: "2026" }).click(); ok(!(await page.isChecked('#pub-years input[value="2026"]')), "checkbox unticked");
   await page.click(".clear-all"); eq(await n(), total, "cleared"); eq(await page.locator(".active-chip").count(), 0); eq(await page.inputValue("#pub-q"), "");
-  const first = await page.locator(".pub").first().getAttribute("data-year"); await page.selectOption("#pub-sort", "newest");
-  ok(Number(first) < Number(await page.locator(".pub").first().getAttribute("data-year")), "sort");
-  await page.click('#pub-types .chip[data-value="book chapter"]'); await page.click('#pub-years .chip[data-value="2026"]'); eq(await n(), 0); ok(await page.locator(".empty").isVisible(), "empty");
+  eq(await page.locator("#pub-years input:checked, #pub-types input:checked").count(), 0, "all unticked");
+  await page.selectOption("#pub-sort", "oldest"); ys = await hy(); ok(ys.every((y, i) => i === 0 || y > ys[i - 1]), "oldest first " + ys);
+  await page.selectOption("#pub-sort", "newest");
+  await page.check('#pub-types input[value="book chapter"]'); await page.check('#pub-years input[value="2026"]'); eq(await n(), 0); ok(await page.locator(".empty").isVisible(), "empty");
+});
+await t("publications: strip layout, only real URLs become buttons", async () => {
+  await page.goto(B + "/publications/");
+  const row = page.locator(".pub").first(); const [th, bd, ln] = [await row.locator(".ev-thumb").boundingBox(), await row.locator(".ev-body").boundingBox(), await row.locator(".pub-links").boundingBox()];
+  ok(th.x < bd.x && bd.x + bd.width <= ln.x + 1, "thumb | citation | actions");
+  const labels = await page.locator(".pub .pub-links a").allTextContents();
+  eq(labels.filter((l) => l === "Link").length, 1, "one Link (arXiv)"); eq(labels.filter((l) => ["Video", "Slides", "PDF", "DOI"].includes(l)).length, 0, "no invented buttons");
+  eq(await page.locator('.pub .pub-links a[href="https://arxiv.org/abs/2410.12804"]').count(), 1, "arxiv url");
+  eq(await page.locator(".pub .pub-links button").count(), await page.locator(".pub").count(), "BibTeX on every entry");
 });
 await t("BibTeX expand, copy, collapse", async () => {
   await page.goto(B + "/publications/");
@@ -95,13 +108,36 @@ await t("talks: grouped by year desc, rows with thumb/details/links, filters, mo
   const r2 = page.locator(".event-row").first(); const w = await r2.evaluate((e) => getComputedStyle(e).gridTemplateColumns.split(" ").length); eq(w, 2, "mobile columns");
   await page.setViewportSize({ width: 1440, height: 900 });
 });
-await t("contact: mailto links & placeholders marked", async () => {
+await t("teaching: year-grouped strips, latest first, no supervision section", async () => {
+  await page.goto(B + "/teaching/");
+  const ys = (await page.locator(".ev-year-h").allTextContents()).map(Number); ok(ys.length >= 3 && ys.every((y, i) => i === 0 || y < ys[i - 1]), "years " + ys);
+  eq(ys[0], 2026, "latest first"); ok(await page.locator(".strip.teach").count() >= 9, "modules");
+  const txt = await page.locator("main").textContent(); ok(!/supervis|mentoring/i.test(txt), "supervision removed");
+  const row = page.locator(".strip.teach").first(); ok((await row.locator(".ev-thumb").boundingBox()).x < (await row.locator(".ev-body").boundingBox()).x, "strip");
+});
+await t("about: short + long bio (third person) with working copy buttons", async () => {
+  await page.goto(B + "/about/");
+  eq(await page.locator(".bio").count(), 2); eq((await page.locator(".bio h2").allTextContents()).join("|"), "Short bio|Long bio");
+  eq(await page.locator("#short-bio p").count(), 1); const lp = await page.locator("#long-bio p").count(); ok(lp >= 2 && lp <= 3, "long paras " + lp);
+  const all = await page.locator(".bio").allTextContents(); ok(all.every((x) => x.includes("Senior Postdoctoral Researcher")), "title");
+  ok(!/\b(I|my|me)\b/.test(all.join(" ")), "third person");
+  await page.click("#short-bio .copy-btn"); await page.locator("#short-bio .copy-btn", { hasText: "Copied" }).waitFor();
+  const clip = await page.evaluate(() => navigator.clipboard.readText()); ok(clip.startsWith("Gauri Vaidya is a Senior Postdoctoral Researcher"), "clip " + clip.slice(0, 40));
+  await page.click("#long-bio .copy-btn"); await page.locator("#long-bio .copy-btn", { hasText: "Copied" }).waitFor();
+  const c2 = await page.evaluate(() => navigator.clipboard.readText()); ok(c2.split("\n\n").length === lp, "long paras copied");
+});
+await t("contact: icon buttons, no raw URLs/addresses, booking button", async () => {
   await page.goto(B + "/contact/");
-  ok(await page.locator('main a[href="mailto:gaurivaidya.work@gmail.com"]').count() === 1, "mailto");
-  eq(await page.locator(".placeholder").count(), 0, "placeholders"); eq(await page.locator('main a[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "work mailto"); eq(await page.locator('main a[href="https://orcid.org/0000-0002-9699-522X"]').count(), 1, "orcid");
+  const btns = page.locator(".cbtn"); eq(await btns.count(), 7, "buttons");
+  eq((await btns.allTextContents()).join("|"), "Email (work)|Email (personal)|Google Scholar|ORCID|GitHub|LinkedIn|CV");
+  eq(await page.locator(".cbtn svg.icon").count(), 7, "icons");
+  eq(await page.locator('.cbtn[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "work"); eq(await page.locator('.cbtn[href="mailto:gaurivaidya.work@gmail.com"]').count(), 1, "personal");
+  eq(await page.locator('.cbtn[href="https://orcid.org/0000-0002-9699-522X"]').count(), 1, "orcid");
+  const txt = await page.locator("main").textContent(); ok(!/@|https?:|www\.|\.com|\.ie/.test(txt), "raw url/address visible");
+  const book = page.locator(".book a"); eq((await book.textContent()).trim(), "Book a time with me"); eq(await book.getAttribute("href"), "mailto:gauri.vaidya@ul.ie?subject=Meeting%20request", "booking fallback");
   eq(await page.locator("form").count(), 0, "no form");
 });
-await t("footer text", async () => { eq((await page.locator(".site-footer").textContent()).trim(), `© ${new Date().getFullYear()} Gauri Vaidyagauri.vaidya@ul.ie`); });
+await t("footer text", async () => { eq((await page.locator(".site-footer").textContent()).trim(), `Made with ❤️ · © ${new Date().getFullYear()} Gauri Vaidya`); });
 await t("mobile nav toggle (landing + inner)", async () => {
   const m = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await m.goto(B + "/publications/"); ok(!(await m.locator(".site-nav").isVisible()), "inner nav hidden");
