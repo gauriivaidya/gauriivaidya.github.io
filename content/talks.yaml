@@ -1,0 +1,101 @@
+# Talks & Events: one entry per talk, workshop, presentation or event. Newest first.
+# Feeds the Talks & Events page and, with a `cv:` line, the "Invited Talks" or "Workshops" section of the CV.
+# (Awards live in awards.yaml; they also show on the Talks & Events page.)
+#
+# Example entry (copy, paste at the top, edit; only `title`, `type` and `date` are required):
+#
+# - title: Machine Learning for Kidney Disease Surveillance       # Title Case
+#   type: Invited Talks            # Invited Talks | Conference Presentations | Workshops | Panels | Media Appearances | Other Events
+#   date: Mar 2027                 # Mon YYYY, D Mon YYYY, YYYY or YYYY–YYYY; the year is taken from it
+#   host: Royal College of Surgeons in Ireland
+#   location: Dublin, Ireland      # City, Country (or just Country)
+#   role: Invited Speaker
+#   description: Co-presented with Prof Austin Stack.            # a full sentence; write "Prof" and "Dr" without a full stop
+#   link: { label: Slides, url: "https://example.org/slides.pdf" }   # optional, real URLs only
+#   cv: Invited Talks              # put it on the CV in this section (Invited Talks | Workshops); leave out to keep it off the CV
+
+- title: "Breaking Barriers: Addressing Algorithmic Bias for Equitable Cancer Care Access"
+  type: Other Events
+  date: "2025"
+  role: Organiser
+
+- title: Knowledge Graph-Driven Framework for Comparative Analysis of Cohorts from Transcriptomics Data
+  type: Invited Talks
+  date: Oct 2024
+  host: Limerick Digital Cancer Research Centre
+  location: Ireland
+  role: Invited Speaker
+  cv: Invited Talks
+
+- title: Leveraging LLMs for Data Governance
+  type: Workshops
+  date: 21 Oct 2024
+  host: Fidelity Investments
+  role: Technical Volunteer
+  description: Delivered by Prof Meghana Kshirsagar and Dr Vimal Kumar.
+
+- title: Demystifying Machine Learning
+  type: Workshops
+  date: Aug 2024
+  host: Government College of Engineering, Aurangabad
+  location: India
+  role: Facilitator
+  description: Three-day hands-on workshop; co-delivered with Chinmay Kulkarni.
+  cv: Workshops
+
+- title: Immune Cell Profiling from Single-Cell RNA with R
+  type: Workshops
+  date: Apr 2023
+  host: ISCB
+  role: Facilitator
+  description: Co-delivered with Prof Meghana Kshirsagar.
+  cv: Workshops
+
+- title: IEEE International Conference on Blockchain and Cryptocurrency
+  type: Other Events
+  date: "2023"
+  role: Webmaster
+
+- title: "SHIELD: Do It the Safe Way"
+  type: Invited Talks
+  date: Nov 2022
+  host: PyCon Ireland
+  location: Ireland
+  role: Invited Speaker
+  cv: Invited Talks
+
+- title: Researching, Visualizations and Creating ML Models for Climate Change
+  type: Workshops
+  date: Aug 2022
+  host: CVT Internship Outreach Program, Harvard
+  role: Facilitator
+  description: Co-delivered with Dr Meghana Kshirsagar.
+  cv: Workshops
+
+- title: Artificial Intelligence in Smart Transportation
+  type: Invited Talks
+  date: Aug 2022
+  host: Mahatma Gandhi Mission University, Aurangabad
+  location: India
+  role: Invited Speaker
+  description: Co-presented with Dr Meghana Kshirsagar.
+  cv: Invited Talks
+
+- title: Python Development
+  type: Workshops
+  date: 2021–2025
+  host: Thomond Community College
+  location: Ireland
+  role: Facilitator
+  description: Hands-on workshop series.
+  cv: Workshops
+
+- title: "Evathon: International Evolutionary Hackathon"
+  type: Other Events
+  date: "2021"
+  role: Co-Organiser
+
+- title: Smart Aurangabad Hackathon
+  type: Other Events
+  date: "2019"
+  role: Organiser

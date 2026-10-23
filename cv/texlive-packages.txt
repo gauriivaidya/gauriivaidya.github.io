@@ -1,0 +1,16 @@
+# TeX Live packages the CV needs (tested on a clean TeX Live 2025 install; see scripts/install-texlive.sh).
+scheme-basic
+latexmk
+xcolor
+sourcesanspro
+fontaxes
+mweights
+xkeyval
+ly1
+anyfontsize
+microtype
+enumitem
+titlesec
+lastpage
+ragged2e
+etoolbox

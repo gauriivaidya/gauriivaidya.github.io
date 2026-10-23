@@ -1,0 +1,37 @@
+# Honours and awards. Newest first.
+# Feeds the "Honours and Awards" section of the CV and (unless `site: false`) the Talks & Events page,
+# where awards appear first within their year with an "Award" badge.
+#
+# Example entry (only `title` and `date` are required):
+#
+# - title: Best Paper Award                       # Title Case
+#   date: Jun 2027                                 # Mon YYYY or YYYY
+#   host: International Conference on Agents and Artificial Intelligence (ICAART)   # who gave it
+#   location: Porto, Portugal                      # City, Country (or just Country)
+#   description: Awarded for the paper on sustainable hyperparameter optimisation.  # a full sentence
+#   site: false                                    # optional: keep it off the website (CV only)
+#   cv: false                                      # optional: keep it off the CV (website only)
+# Website-only: role (defaults to "Honouree").
+
+- title: "30 Under 30: Top People in Tech 2025"
+  date: "2025"
+  host: Business Post
+
+- title: Runner-Up, Thesis in Three (Faculty Heat)
+  date: Apr 2023
+  host: Faculty of Science and Engineering, University of Limerick
+  location: Ireland
+  description: Placed third among 12 participants.
+
+- title: First Prize, Smart India Hackathon
+  date: Mar 2019
+  host: Government of India
+  location: India
+  description: "Awarded for the best IoT-based waste-management system (€570 cash award); first among 20 finalist teams. Team: Rushikesh Jachak, Purva Chaudhari, Mayur Rahangdale, and Prathamesh Chaudhari."
+
+- title: Best Outgoing Student
+  date: Mar 2013
+  host: St. Xavier's High School
+  location: India
+  description: Selected from approximately 200 students.
+  site: false

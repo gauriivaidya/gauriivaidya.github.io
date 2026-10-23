@@ -141,12 +141,6 @@ main{outline:none;flex:1 0 auto}
   .profile{float:none;width:auto;margin:0 0 24px;display:flex;align-items:center;gap:18px;text-align:left}
   .profile-img{width:112px;height:112px;flex:none}.profile figcaption{margin:0}
 }
-/* cv */
-.cv-actions{display:flex;flex-wrap:wrap;gap:10px}.cv-actions .btn{gap:8px;text-decoration:none}
-.cv-frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg-2);height:min(1100px,calc(100vh - 200px));min-height:560px}
-.cv-frame iframe{display:block;width:100%;height:100%;border:0}
-.cv-note{margin-top:14px;font-size:var(--fs-sm);color:var(--text-2)}
-@media (max-width:640px){.cv-frame{display:none}}
 /* contact */
 .contact-intro{font-size:var(--fs-md);max-width:62ch}
 .contact-loc{font-size:var(--fs-sm);color:var(--text-2)}

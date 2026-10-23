@@ -1,42 +1,54 @@
 {
-  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), label, abbr (venue abbreviation shown as the badge), abstract, link (paper page), pdf, doi (bare, e.g. 10.1000/xyz), code, video, slides, project. A button is shown only when a URL or abstract is set. Only add verified URLs.",
+  "_comment": "Optional extra fields per BibTeX key: type override (journal|conference|preprint|book chapter|other), label, abbr (venue abbreviation shown as the badge), abstract, link (paper page), pdf, doi (bare, e.g. 10.1000/xyz), code, video, slides, project. A button is shown only when a URL or abstract is set. Only add verified URLs. \"cv\": put the paper on the CV in that subsection (Journal Articles | Conference Papers | Book Chapters and Short Papers | Conference Abstracts | Posters); leave out to keep it off the CV. The CV citation is built from the .bib entry (same title and venue as the website); for a poster, use {\"section\": \"Posters\", \"location\": \"City, Country\"} to add where it was presented.",
   "bindra2021insights": {
-    "abbr": "SCI"
+    "abbr": "SCI",
+    "cv": "Conference Papers"
   },
   "chen2026nl2code": {
     "abbr": "ICAART"
   },
   "kshirsagar2022decart": {
-    "abbr": "SMARTGREENS"
+    "abbr": "SMARTGREENS",
+    "cv": "Conference Papers"
   },
   "kshirsagar2022digitalhealth": {
     "type": "other",
     "label": "Poster",
-    "abbr": "Poster"
+    "abbr": "Poster",
+    "cv": {
+      "section": "Posters",
+      "location": "Galway, Ireland"
+    }
   },
   "kshirsagar2022trustworthiness": {
-    "abbr": "IJNCR"
+    "abbr": "IJNCR",
+    "cv": "Journal Articles"
   },
   "kshirsagar2023annotation": {
     "type": "other",
     "label": "Abstract",
-    "abbr": "BioC"
+    "abbr": "BioC",
+    "cv": "Conference Abstracts"
   },
   "kshirsagar2023scmarkerbase": {
     "type": "other",
     "label": "Abstract",
-    "abbr": "InCoB"
+    "abbr": "InCoB",
+    "cv": "Conference Abstracts"
   },
   "kshirsagar2023sensible": {
-    "abbr": "Eng. Rep."
+    "abbr": "Eng. Rep.",
+    "cv": "Journal Articles"
   },
   "kshirsagar2024hnscc": {
     "type": "other",
     "label": "Abstract",
-    "abbr": "BioC"
+    "abbr": "BioC",
+    "cv": "Conference Abstracts"
   },
   "kshirsagar2025bias": {
-    "abbr": "ICAART"
+    "abbr": "ICAART",
+    "cv": "Conference Papers"
   },
   "kshirsagar2025webtool": {
     "abbr": "ICAART"
@@ -45,12 +57,14 @@
     "abbr": "AICS"
   },
   "nagori2020multichain": {
-    "abbr": "SmartCom"
+    "abbr": "SmartCom",
+    "cv": "Conference Papers"
   },
   "oconnor2024hip": {
     "type": "preprint",
     "link": "https://arxiv.org/abs/2410.12804",
-    "abbr": "arXiv"
+    "abbr": "arXiv",
+    "cv": "Conference Papers"
   },
   "oconnor2026bigdata": {
     "type": "other",
@@ -58,32 +72,45 @@
     "abbr": "EMJ"
   },
   "ryan2022prng": {
-    "abbr": "Sci. Rep."
+    "abbr": "Sci. Rep.",
+    "cv": "Journal Articles"
   },
   "urban2025datapulse": {
     "abbr": "DATA"
   },
   "vaidya2020privacy": {
-    "abbr": "Chapter"
+    "abbr": "Chapter",
+    "cv": "Book Chapters and Short Papers"
   },
   "vaidya2022hyperestimator": {
-    "abbr": "ICSBT"
+    "abbr": "ICSBT",
+    "cv": "Conference Papers"
   },
   "vaidya2023gehp": {
     "type": "other",
     "label": "Poster",
-    "abbr": "Poster"
+    "abbr": "Poster",
+    "cv": {
+      "section": "Posters",
+      "location": "Limerick, Ireland"
+    }
   },
   "vaidya2023grammatical": {
-    "abbr": "Algorithms"
+    "abbr": "Algorithms",
+    "cv": "Journal Articles"
   },
   "vaidya2024hyperge": {
     "type": "other",
     "label": "Poster",
-    "abbr": "Poster"
+    "abbr": "Poster",
+    "cv": {
+      "section": "Posters",
+      "location": "Amsterdam, Netherlands"
+    }
   },
   "vaidya2025purge": {
-    "abbr": "ICAART"
+    "abbr": "ICAART",
+    "cv": "Conference Papers"
   },
   "vaidya2025resource": {
     "abbr": "ICAART"
@@ -96,12 +123,15 @@
   "yao2021bioinspired": {
     "type": "other",
     "label": "Extended abstract",
-    "abbr": "Evo*"
+    "abbr": "Evo*",
+    "cv": "Book Chapters and Short Papers"
   },
   "yao2021convergence": {
-    "abbr": "Front. Blockchain"
+    "abbr": "Front. Blockchain",
+    "cv": "Journal Articles"
   },
   "yao2024knowledge": {
-    "abbr": "Chapter"
+    "abbr": "Chapter",
+    "cv": "Book Chapters and Short Papers"
   }
 }

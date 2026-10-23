@@ -6,7 +6,7 @@ export function SocialRow() {
   const c = site.contact;
   const links = [
     ["Email", `mailto:${c.workEmail}`, "mail"], ["Google Scholar", c.scholar, "scholar"], ["ORCID", c.orcid, "orcid"],
-    ["GitHub", c.github, "github"], ["LinkedIn", c.linkedin, "linkedin"], ["CV", "/cv/", "file"],
+    ["GitHub", c.github, "github"], ["LinkedIn", c.linkedin, "linkedin"],
   ];
   return (
     <ul className="social">

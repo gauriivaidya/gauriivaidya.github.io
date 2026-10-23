@@ -4,7 +4,6 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { meta } from "./meta";
 import { Contact } from "./pages/Contact";
-import { CV } from "./pages/CV";
 import { Events } from "./pages/Events";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
@@ -13,7 +12,7 @@ import { Teaching } from "./pages/Teaching";
 import { Router, useRouter } from "./router";
 
 const PAGES: Record<string, () => React.JSX.Element> = {
-  "/": Home, "/publications/": Publications, "/teaching/": Teaching, "/talks/": Events, "/cv/": CV, "/contact/": Contact,
+  "/": Home, "/publications/": Publications, "/teaching/": Teaching, "/talks/": Events, "/contact/": Contact,
 };
 
 function Shell() {

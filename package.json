@@ -4,10 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "content": "python3 scripts/content2json.py",
     "bib": "python3 scripts/bib2json.py",
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "build": "python3 scripts/bib2json.py && tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "build": "npm run build:cv && npm run build:site",
+    "build:cv": "python3 scripts/build-cv.py",
+    "build:site": "python3 scripts/content2json.py && python3 scripts/bib2json.py && tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview --port 4174",
     "test:e2e": "node tests/e2e.mjs"
   },

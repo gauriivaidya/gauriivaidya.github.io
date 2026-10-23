@@ -6,7 +6,6 @@ const T: Record<string, [string, string]> = {
   "/publications/": [t("Publications"), "Publications by Gauri Vaidya, searchable by year and type, with BibTeX."],
   "/teaching/": [t("Teaching"), "Modules taught by Gauri Vaidya at the University of Limerick."],
   "/talks/": [t("Talks"), "Invited talks, workshops, awards and events."],
-  "/cv/": [t("CV"), "Curriculum vitae of Gauri Vaidya (PDF)."],
   "/contact/": [t("Contact"), "Get in touch with Gauri Vaidya."],
 };
 export const meta = (path: string) => {

@@ -1,4 +1,6 @@
 // Real-browser end-to-end checks against the production build (vite preview / any static server).
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { chromium } from "playwright-core";
 const B = process.env.BASE ?? "http://localhost:4173";
 const browser = await chromium.launch({ executablePath: process.env.CHROME ?? "/usr/bin/google-chrome", args: ["--no-sandbox"] });
@@ -12,7 +14,7 @@ const t = async (name, fn) => { try { await fn(); pass++; console.log("PASS", na
 const eq = (a, b, m = "") => { if (a !== b) throw new Error(`${m} expected ${JSON.stringify(b)} got ${JSON.stringify(a)}`); };
 const ok = (c, m) => { if (!c) throw new Error(m); };
 
-const routes = { "/": null, "/publications/": "Publications", "/teaching/": "Teaching", "/talks/": "Talks & Events", "/cv/": "CV", "/contact/": "Contact" };
+const routes = { "/": null, "/publications/": "Publications", "/teaching/": "Teaching", "/talks/": "Talks & Events", "/contact/": "Contact" };
 for (const [r, h] of Object.entries(routes)) await t(`route ${r} loads directly (prerendered)`, async () => {
   const res = await page.request.get(B + r); eq(res.status(), 200, "status");
   const html = await res.text(); ok(html.includes("<main"), "no prerendered main");
@@ -30,10 +32,11 @@ await t("/about/ aliases home: prerendered, canonical /, URL rewritten, not in s
 await t("404.html & sitemap & robots exist", async () => {
   for (const f of ["/404.html", "/sitemap.xml", "/robots.txt", "/.nojekyll", "/cv.pdf"]) eq((await page.request.get(B + f)).status(), 200, f);
   ok((await (await page.request.get(B + "/404.html")).text()).includes("Page not found"), "404 content");
-  ok((await (await page.request.get(B + "/sitemap.xml")).text()).includes("/cv/"), "cv in sitemap");
+  const sm = await (await page.request.get(B + "/sitemap.xml")).text(); ok(!sm.includes("/cv"), "no cv in sitemap"); eq((sm.match(/<loc>/g) || []).length, 5, "sitemap urls");
+  const rb = await (await page.request.get(B + "/robots.txt")).text(); ok(/^Disallow: \/cv\.pdf$/m.test(rb) && /^Allow: \/$/m.test(rb) && rb.includes("Sitemap: https://gauriivaidya.github.io/sitemap.xml"), "robots");
 });
-await t("header nav: About · Publications · Teaching · Talks & Events · CV · Contact, client-side", async () => {
-  await page.goto(B + "/publications/"); eq((await page.locator(".site-nav a").allTextContents()).join("|"), "About|Publications|Teaching|Talks & Events|CV|Contact");
+await t("header nav: About · Publications · Teaching · Talks & Events · Contact (no CV), client-side", async () => {
+  await page.goto(B + "/publications/"); eq((await page.locator(".site-nav a").allTextContents()).join("|"), "About|Publications|Teaching|Talks & Events|Contact");
   eq(await page.locator(".site-nav a", { hasText: "About" }).getAttribute("href"), "/");
   await page.goto(B + "/"); await page.click(".site-nav >> text=Publications");
   await page.waitForURL(B + "/publications/"); eq((await page.locator("h1").textContent()).trim(), "Publications");
@@ -60,8 +63,8 @@ await t("home: no selected-publications section; social icon row last", async ()
   await page.goto(B + "/");
   eq(await page.locator("main .pub, main .selected, main .rows").count(), 0, "no publication rows on home");
   ok(!/selected publications/i.test(await page.locator("main").textContent()), "no Selected publications heading");
-  const s = page.locator("ul.social a"); eq((await s.evaluateAll((l) => l.map((a) => a.getAttribute("aria-label")))).join("|"), "Email|Google Scholar|ORCID|GitHub|LinkedIn|CV");
-  eq(await s.locator("svg.icon").count(), 6, "icons"); eq(await page.locator('ul.social a[href="/cv/"]').count(), 1, "cv page"); eq(await page.locator('ul.social a[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "email");
+  const s = page.locator("ul.social a"); eq((await s.evaluateAll((l) => l.map((a) => a.getAttribute("aria-label")))).join("|"), "Email|Google Scholar|ORCID|GitHub|LinkedIn");
+  eq(await s.locator("svg.icon").count(), 5, "icons"); eq(await page.locator('ul.social a[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "email");
   const [bio, soc] = [await page.locator(".about-body").boundingBox(), await page.locator("ul.social").boundingBox()]; ok(soc.y > bio.y + bio.height - 1, "social at bottom");
 });
 await t("uniform top nav on every page, no sidebar, aligned content", async () => {
@@ -69,7 +72,7 @@ await t("uniform top nav on every page, no sidebar, aligned content", async () =
   for (const r of Object.keys(routes)) {
     await page.goto(B + r);
     eq(await page.locator(".sidebar").count(), 0, "sidebar " + r);
-    eq(await page.locator(".site-header .top-nav a").count(), 6, "nav " + r);
+    eq(await page.locator(".site-header .top-nav a").count(), 5, "nav " + r);
     const lx = await page.locator(".logo").evaluate((e) => e.getBoundingClientRect().left);
     const hx = await page.locator("h1").evaluate((e) => e.getBoundingClientRect().left);
     eq(Math.round(lx), Math.round(x0), "logo x " + r); eq(Math.round(hx), Math.round(x0), "h1 x " + r);
@@ -124,6 +127,29 @@ await t("BibTeX expand, copy, collapse", async () => {
   const clip = await page.evaluate(() => navigator.clipboard.readText()); ok(clip.startsWith("@") && clip.includes("author"), "clipboard: " + clip.slice(0, 30));
   await btn.click(); ok(!(await pub.locator(".bib-panel").isVisible()), "collapsed");
 });
+// content/*.yaml is the single source: read it (via Python + PyYAML, as the build does) and compare with the rendered pages.
+const yamlCount = (file, filter = "True") => Number(execFileSync(process.env.PYTHON ?? "python3", ["-c",
+  `import yaml,sys; d=yaml.safe_load(open(sys.argv[1], encoding="utf-8")) or []; print(sum(1 for e in d if ${filter}))`, new URL(`../content/${file}`, import.meta.url).pathname]).toString().trim());
+await t("teaching: site matches the CV (CS6472 64 students, CS4221 Fall 2024, location shown); no CV-only overrides left", async () => {
+  await page.goto(B + "/teaching/");
+  const row = (code) => page.locator(".row.teach", { hasText: code }).first().innerText();
+  ok((await row("CS6472")).includes("64 students (Spring 2026)"), "CS6472 64");
+  ok((await row("CS4221")).includes("Fall 2024"), "CS4221 Fall 2024");
+  ok((await row("CS6472")).includes("University of Limerick, Ireland"), "location");
+  for (const f of ["talks.yaml", "awards.yaml", "teaching.yaml"]) {
+    const y = readFileSync(new URL("../content/" + f, import.meta.url), "utf8").split("\n").filter((l) => !l.startsWith("#")).join("\n");
+    ok(!/^\s*cv_\w+:/m.test(y), "no cv_* overrides in " + f); ok(!/website says|CV says|conflict/i.test(readFileSync(new URL("../content/" + f, import.meta.url), "utf8")), "no conflict notes in " + f);
+  }
+});
+await t("talks: content/talks.yaml entry count matches the rows on the Talks page (+ awards.yaml site awards)", async () => {
+  const talks = yamlCount("talks.yaml"), awards = yamlCount("awards.yaml", 'e.get("site", True) is not False');
+  ok(talks > 0, "talks.yaml has entries");
+  await page.goto(B + "/talks/");
+  eq(await page.locator(".event-row:not([data-type='Awards / Recognition'])").count(), talks, "talks.yaml entries vs non-award rows");
+  eq(await page.locator(".event-row[data-type='Awards / Recognition']").count(), awards, "awards.yaml site awards vs award rows");
+  eq(await page.locator(".event-row").count(), talks + awards, "total rows");
+  await page.goto(B + "/teaching/"); eq(await page.locator(".row.teach").count(), yamlCount("teaching.yaml"), "teaching.yaml entries vs Teaching rows");
+});
 await t("talks: year-grouped al-folio rows (badge | details), filters, mobile stacking", async () => {
   await page.goto(B + "/talks/");
   const ys = await page.locator(".yg-year").allTextContents(); ok(ys.length > 2 && ys.every((y, i) => i === 0 || Number(y) < Number(ys[i - 1])), "years " + ys);
@@ -156,20 +182,36 @@ await t("teaching: year-grouped al-folio rows with code badges, latest first, no
   eq(await page.locator(".row.teach .badge").first().textContent(), "CS6604", "code badge");
   const txt = await page.locator("main").textContent(); ok(!/supervis|mentoring/i.test(txt), "supervision removed"); ok(!/applied education|real confidence/i.test(txt), "no teaching-philosophy sentence");
 });
-await t("cv: embedded PDF on desktop, download + open buttons, hidden embed on phones", async () => {
-  await page.goto(B + "/cv/");
-  const dl = page.locator(".cv-actions a", { hasText: "Download PDF" }); eq(await dl.getAttribute("href"), "/cv.pdf"); eq(await dl.getAttribute("download"), "Gauri-Vaidya-CV.pdf");
-  eq(await page.locator(".cv-actions a", { hasText: "Open in new tab" }).getAttribute("target"), "_blank");
-  ok((await page.locator(".cv-frame iframe").getAttribute("src")).startsWith("/cv.pdf"), "iframe"); ok(await page.locator(".cv-frame").isVisible(), "embed visible");
-  const r = await page.request.get(B + "/cv.pdf"); eq(r.headers()["content-type"], "application/pdf");
-  await page.setViewportSize({ width: 390, height: 844 }); ok(!(await page.locator(".cv-frame").isVisible()), "embed hidden on mobile"); ok(await page.locator(".cv-actions").isVisible(), "buttons on mobile");
+await t("cv: no visible way to the CV; /cv.pdf still served; /cv/ is not a page", async () => {
+  const noCv = '[href*="/cv"], [href*="cv.pdf"]';
+  for (const [w, h] of [[1440, 900], [390, 844]]) {
+    await page.setViewportSize({ width: w, height: h });
+    for (const r of ["/", "/publications/", "/teaching/", "/talks/", "/contact/"]) {
+      await page.goto(B + r);
+      if (w < 900) { await page.click(".nav-toggle"); ok(await page.locator(".site-nav").isVisible(), "mobile menu open " + r); }
+      for (const scope of [".site-header", "main", ".site-footer"]) eq(await page.locator(`${scope} :is(${noCv})`).count(), 0, `cv link in ${scope} ${r} @${w}`);
+      ok(!/\bCV\b|curriculum vitae/i.test(await page.locator("body").innerText()), `CV text visible ${r} @${w}`);
+    }
+  }
   await page.setViewportSize({ width: 1440, height: 900 });
+  const pdf = await page.request.get(B + "/cv.pdf"); eq(pdf.status(), 200, "cv.pdf status"); eq(pdf.headers()["content-type"], "application/pdf", "cv.pdf type");
+  const res = await page.request.get(B + "/cv/"); const html = await res.text();
+  ok(res.status() === 404 || !html.includes("<title>Gauri Vaidya | CV</title>"), "/cv/ must not be prerendered (" + res.status() + ")");
+  ok(!html.includes("cv-frame") && !html.includes("/cv.pdf"), "no CV page markup");
+  // GitHub Pages answers /cv/ with 404.html; `vite preview` falls back to index.html (SPA), where opening it would hydrate a mismatch.
+  if (res.status() === 404) {
+    ok(html.includes("Page not found"), "404 page");
+    // Separate tab: the expected 404 document load is logged as a console error, which the global no-console-errors check must not see.
+    const p = await page.context().newPage(); const errs = []; p.on("pageerror", (e) => errs.push(e.message)); p.on("console", (m) => m.type() === "error" && !/status of 404/.test(m.text()) && errs.push(m.text()));
+    await p.goto(B + "/cv/"); eq((await p.locator("h1").textContent()).trim(), "Page not found", "/cv/ renders not-found"); eq(await p.title(), "Gauri Vaidya | Page not found", "/cv/ title");
+    ok(errs.length === 0, "errors on /cv/: " + errs.join(" | ")); await p.close();
+  }
 });
 await t("tab titles: home 'Dr Gauri Vaidya', others 'Gauri Vaidya | Page' (prerendered + runtime)", async () => {
-  const want = { "/": "Dr Gauri Vaidya", "/about/": "Dr Gauri Vaidya", "/publications/": "Gauri Vaidya | Publications", "/teaching/": "Gauri Vaidya | Teaching", "/talks/": "Gauri Vaidya | Talks", "/cv/": "Gauri Vaidya | CV", "/contact/": "Gauri Vaidya | Contact", "/404.html": "Gauri Vaidya | Page not found" };
+  const want = { "/": "Dr Gauri Vaidya", "/about/": "Dr Gauri Vaidya", "/publications/": "Gauri Vaidya | Publications", "/teaching/": "Gauri Vaidya | Teaching", "/talks/": "Gauri Vaidya | Talks", "/contact/": "Gauri Vaidya | Contact", "/404.html": "Gauri Vaidya | Page not found" };
   for (const [r, title] of Object.entries(want)) { ok((await (await page.request.get(B + r)).text()).includes(`<title>${title}</title>`), "prerendered " + r); await page.goto(B + r); eq(await page.title(), title, r); }
   await page.goto(B + "/"); await page.click(".site-nav >> text=Talks & Events"); await page.waitForURL(B + "/talks/"); eq(await page.title(), "Gauri Vaidya | Talks", "client nav title");
-  await page.click(".site-nav >> text=CV"); await page.waitForURL(B + "/cv/"); eq(await page.title(), "Gauri Vaidya | CV", "client nav title cv");
+  await page.click(".site-nav >> text=Contact"); await page.waitForURL(B + "/contact/"); eq(await page.title(), "Gauri Vaidya | Contact", "client nav title contact");
 });
 await t("favicon: svg (pure paths, no text/fonts), 32px png, apple-touch-icon, manifest", async () => {
   const html = await (await page.request.get(B + "/")).text();
@@ -180,11 +222,11 @@ await t("favicon: svg (pure paths, no text/fonts), 32px png, apple-touch-icon, m
 });
 await t("contact: icon buttons, no raw URLs/addresses, booking button", async () => {
   await page.goto(B + "/contact/");
-  const btns = page.locator(".cbtn"); eq(await btns.count(), 7, "buttons");
-  eq((await btns.allTextContents()).join("|"), "Email (work)|Email (personal)|Google Scholar|ORCID|GitHub|LinkedIn|CV");
-  eq(await page.locator(".cbtn svg.icon").count(), 7, "icons");
+  const btns = page.locator(".cbtn"); eq(await btns.count(), 6, "buttons");
+  eq((await btns.allTextContents()).join("|"), "Email (work)|Email (personal)|Google Scholar|ORCID|GitHub|LinkedIn");
+  eq(await page.locator(".cbtn svg.icon").count(), 6, "icons");
   eq(await page.locator('.cbtn[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "work"); eq(await page.locator('.cbtn[href="mailto:gaurivaidya.work@gmail.com"]').count(), 1, "personal");
-  eq(await page.locator('.cbtn[href="https://orcid.org/0000-0002-9699-522X"]').count(), 1, "orcid"); eq(await page.locator('.cbtn[href="/cv/"]').count(), 1, "cv page");
+  eq(await page.locator('.cbtn[href="https://orcid.org/0000-0002-9699-522X"]').count(), 1, "orcid");
   const txt = await page.locator("main").textContent(); ok(!/@|https?:|www\.|\.com|\.ie/.test(txt), "raw url/address visible");
   const book = page.locator(".book a"); eq((await book.textContent()).trim(), "Book a time with me"); ok((await book.getAttribute("href")).startsWith("mailto:gauri.vaidya@ul.ie?subject=Meeting%20request"), "no-JS mailto fallback");
   ok(!(await page.locator(".book-dialog").isVisible()), "dialog closed by default");

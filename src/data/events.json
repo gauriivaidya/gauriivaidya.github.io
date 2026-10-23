@@ -1,0 +1,148 @@
+[
+  {
+    "id": "30-under-30-top-people-in-tech-2025",
+    "title": "30 Under 30: Top People in Tech 2025",
+    "type": "Awards / Recognition",
+    "date": "2025",
+    "year": 2025,
+    "host": "Business Post",
+    "role": "Honouree"
+  },
+  {
+    "id": "breaking-barriers-addressing-algorithmic-bias-fo",
+    "title": "Breaking Barriers: Addressing Algorithmic Bias for Equitable Cancer Care Access",
+    "type": "Other Events",
+    "date": "2025",
+    "year": 2025,
+    "role": "Organiser"
+  },
+  {
+    "id": "knowledge-graph-driven-framework-for-comparative",
+    "title": "Knowledge Graph-Driven Framework for Comparative Analysis of Cohorts from Transcriptomics Data",
+    "type": "Invited Talks",
+    "date": "Oct 2024",
+    "year": 2024,
+    "host": "Limerick Digital Cancer Research Centre",
+    "location": "Ireland",
+    "role": "Invited Speaker"
+  },
+  {
+    "id": "leveraging-llms-for-data-governance",
+    "title": "Leveraging LLMs for Data Governance",
+    "type": "Workshops",
+    "date": "21 Oct 2024",
+    "year": 2024,
+    "host": "Fidelity Investments",
+    "role": "Technical Volunteer",
+    "description": "Delivered by Prof Meghana Kshirsagar and Dr Vimal Kumar."
+  },
+  {
+    "id": "demystifying-machine-learning",
+    "title": "Demystifying Machine Learning",
+    "type": "Workshops",
+    "date": "Aug 2024",
+    "year": 2024,
+    "host": "Government College of Engineering, Aurangabad",
+    "location": "India",
+    "role": "Facilitator",
+    "description": "Three-day hands-on workshop; co-delivered with Chinmay Kulkarni."
+  },
+  {
+    "id": "runner-up-thesis-in-three-faculty-heat",
+    "title": "Runner-Up, Thesis in Three (Faculty Heat)",
+    "type": "Awards / Recognition",
+    "date": "Apr 2023",
+    "year": 2023,
+    "host": "Faculty of Science and Engineering, University of Limerick",
+    "location": "Ireland",
+    "role": "Honouree",
+    "description": "Placed third among 12 participants."
+  },
+  {
+    "id": "immune-cell-profiling-from-single-cell-rna-with-",
+    "title": "Immune Cell Profiling from Single-Cell RNA with R",
+    "type": "Workshops",
+    "date": "Apr 2023",
+    "year": 2023,
+    "host": "ISCB",
+    "role": "Facilitator",
+    "description": "Co-delivered with Prof Meghana Kshirsagar."
+  },
+  {
+    "id": "ieee-international-conference-on-blockchain-and-",
+    "title": "IEEE International Conference on Blockchain and Cryptocurrency",
+    "type": "Other Events",
+    "date": "2023",
+    "year": 2023,
+    "role": "Webmaster"
+  },
+  {
+    "id": "shield-do-it-the-safe-way",
+    "title": "SHIELD: Do It the Safe Way",
+    "type": "Invited Talks",
+    "date": "Nov 2022",
+    "year": 2022,
+    "host": "PyCon Ireland",
+    "location": "Ireland",
+    "role": "Invited Speaker"
+  },
+  {
+    "id": "researching-visualizations-and-creating-ml-model",
+    "title": "Researching, Visualizations and Creating ML Models for Climate Change",
+    "type": "Workshops",
+    "date": "Aug 2022",
+    "year": 2022,
+    "host": "CVT Internship Outreach Program, Harvard",
+    "role": "Facilitator",
+    "description": "Co-delivered with Dr Meghana Kshirsagar."
+  },
+  {
+    "id": "artificial-intelligence-in-smart-transportation",
+    "title": "Artificial Intelligence in Smart Transportation",
+    "type": "Invited Talks",
+    "date": "Aug 2022",
+    "year": 2022,
+    "host": "Mahatma Gandhi Mission University, Aurangabad",
+    "location": "India",
+    "role": "Invited Speaker",
+    "description": "Co-presented with Dr Meghana Kshirsagar."
+  },
+  {
+    "id": "python-development",
+    "title": "Python Development",
+    "type": "Workshops",
+    "date": "2021–2025",
+    "year": 2021,
+    "host": "Thomond Community College",
+    "location": "Ireland",
+    "role": "Facilitator",
+    "description": "Hands-on workshop series."
+  },
+  {
+    "id": "evathon-international-evolutionary-hackathon",
+    "title": "Evathon: International Evolutionary Hackathon",
+    "type": "Other Events",
+    "date": "2021",
+    "year": 2021,
+    "role": "Co-Organiser"
+  },
+  {
+    "id": "first-prize-smart-india-hackathon",
+    "title": "First Prize, Smart India Hackathon",
+    "type": "Awards / Recognition",
+    "date": "Mar 2019",
+    "year": 2019,
+    "host": "Government of India",
+    "location": "India",
+    "role": "Honouree",
+    "description": "Awarded for the best IoT-based waste-management system (€570 cash award); first among 20 finalist teams. Team: Rushikesh Jachak, Purva Chaudhari, Mayur Rahangdale, and Prathamesh Chaudhari."
+  },
+  {
+    "id": "smart-aurangabad-hackathon",
+    "title": "Smart Aurangabad Hackathon",
+    "type": "Other Events",
+    "date": "2019",
+    "year": 2019,
+    "role": "Organiser"
+  }
+]

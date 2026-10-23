@@ -8,5 +8,5 @@ export function MenuToggle({ open, onToggle }: { open: boolean; onToggle: () => 
 }
 export const NAV = [
   { path: "/", label: "About" }, { path: "/publications/", label: "Publications" }, { path: "/teaching/", label: "Teaching" },
-  { path: "/talks/", label: "Talks & Events" }, { path: "/cv/", label: "CV" }, { path: "/contact/", label: "Contact" },
+  { path: "/talks/", label: "Talks & Events" }, { path: "/contact/", label: "Contact" },
 ];

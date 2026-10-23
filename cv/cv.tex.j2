@@ -1,0 +1,289 @@
+% CV template: rendered by scripts/build-cv.py with Jinja2 (custom delimiters: double-parenthesis-star for blocks, triple parentheses for values, so LaTeX braces stay untouched).
+% Static text lives here; Honours and Awards, Teaching Experience, Publications, Invited Talks and Workshops come from content/.
+% Conventions (see content/README.md): every entry uses the macros below, so spacing, dates and layout are the same everywhere.
+\documentclass[10pt,a4paper]{article}
+\usepackage[a4paper,left=1.65cm,right=1.65cm,top=1.35cm,bottom=1.45cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[default,light,semibold]{sourcesanspro}
+\usepackage{anyfontsize}
+\usepackage[expansion=false]{microtype}
+\usepackage{enumitem,tabularx,array,xcolor,fancyhdr,titlesec,lastpage,ragged2e}
+\usepackage[colorlinks=true,urlcolor=linkblue,linkcolor=ink,citecolor=ink]{hyperref}
+\hypersetup{
+  pdftitle={Curriculum Vitae — Gauri Vaidya},
+  pdfauthor={Gauri Vaidya},
+  pdfsubject={Curriculum Vitae},
+  pdfkeywords={},
+  pdfcreator={},
+  pdfproducer={}
+}
+
+\definecolor{ink}{HTML}{202020}
+\definecolor{secondary}{HTML}{555555}
+\definecolor{rulegray}{HTML}{B7B7B7}
+\definecolor{linkblue}{HTML}{1F4E79}
+
+\newcommand{\sizeName}{\fontsize{24}{27}\selectfont}
+\newcommand{\sizeSection}{\fontsize{12.5}{14}\selectfont}
+\newcommand{\sizeRole}{\fontsize{11.5}{14}\selectfont}
+\newcommand{\sizeSubsection}{\fontsize{10.5}{12.5}\selectfont}
+\newcommand{\sizeEntry}{\fontsize{10}{12.5}\selectfont}
+\newcommand{\sizeMeta}{\fontsize{9.2}{11.5}\selectfont}
+
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+\setlist[itemize]{leftmargin=1.15em,label=\textbullet,itemsep=1.4pt,topsep=2.5pt,parsep=0pt,partopsep=0pt,font=\sizeEntry,before=\sizeEntry}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\fontsize{8.5}{10}\selectfont\color{secondary}GAURI VAIDYA -- Curriculum Vitae}
+\fancyfoot[R]{\fontsize{8.5}{10}\selectfont\color{secondary}Page \thepage\ of \pageref{LastPage}}
+\setlength{\footskip}{17pt}
+
+\titleformat{\section}{\sizeSection\bfseries}{}{0pt}{}[\vspace{2.5pt}\color{rulegray}\titlerule]
+\titlespacing*{\section}{0pt}{14pt}{7pt}
+\titleformat{\subsection}{\sizeSubsection\bfseries}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{9pt}{4pt}
+
+\newcommand{\cvname}[1]{{\sizeName\bfseries #1}\par}
+\newcommand{\cvrole}[1]{\vspace{2pt}{\sizeRole\color{secondary}#1}\par}
+\newcommand{\cvaffiliation}[1]{\vspace{6pt}{\sizeMeta\itshape #1}\par}
+\newcommand{\cvlinks}[1]{\vspace{3pt}{\sizeMeta\color{secondary}#1}\par}
+% One gap before every entry and publication; section and subsection spacing comes from titlesec only.
+\newlength{\entryskip}\setlength{\entryskip}{6pt}
+% Directly after a heading there is no extra gap (and no page break): the heading's own spacing applies.
+\makeatletter\newcommand{\cvgap}{\par\if@nobreak\else\addvspace{\entryskip}\fi}\makeatother
+% Dates: right-aligned, secondary colour, "Mon YYYY" or "YYYY", ranges with an unspaced en dash.
+\newcommand{\cvdate}[1]{{\sizeMeta\color{secondary}#1}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+% Entry: bold title with the date right-aligned / italic "Organisation, City, Country" (optional).
+\newcommand{\cventry}[3]{\cvgap\noindent
+  \begin{tabularx}{\linewidth}[t]{@{}L@{\hspace{1em}}r@{}}{\sizeEntry\bfseries #1} & \cvdate{#2}\end{tabularx}\par\nobreak
+  \if\relax\detokenize{#3}\relax\else{\sizeMeta\itshape #3\par}\nobreak\fi}
+% Detail line: bold sentence-case label, no full stop at the end.
+\newcommand{\cvmeta}[2]{{\sizeMeta\textbf{#1:} #2\par}}
+% Description: full sentences, ending with a full stop.
+\newcommand{\cvdesc}[1]{{\sizeEntry #1\par}}
+% Compact list item (inside itemize): text ending with a full stop, optional date right-aligned.
+\newcommand{\cvitem}[2]{\item\begin{tabularx}{\linewidth}[t]{@{}L@{\hspace{1em}}r@{}}#1 & \cvdate{#2}\end{tabularx}}
+% Publication: [n] Authors. ``Title.'' \textit{Venue}, ..., year.  (hanging indent)
+\newcommand{\pubitem}[2]{\cvgap{\sizeEntry\hangindent=2.2em\hangafter=1\noindent\makebox[2.2em][l]{[#1]}#2\par}}
+
+\begin{document}
+
+\cvname{GAURI VAIDYA, PhD}
+\cvrole{Senior Postdoctoral Researcher in Artificial Intelligence}
+\cvaffiliation{University of Limerick, Co. Limerick, V94 T9PX, Ireland}
+\cvlinks{%
+\href{mailto:gauri.vaidya@ul.ie}{gauri.vaidya@ul.ie}
+\enspace|\enspace \href{https://gauriivaidya.github.io/}{gauriivaidya.github.io}
+\enspace|\enspace \href{https://orcid.org/0000-0002-9699-522X}{ORCID: 0000-0002-9699-522X}
+\enspace|\enspace \href{https://scholar.google.com/citations?user=HIo03L4AAAAJ}{Google Scholar}
+\enspace|\enspace \href{https://github.com/gauriivaidya}{GitHub}
+\enspace|\enspace \href{https://linkedin.com/in/gauriivaidya}{LinkedIn}}
+\cvlinks{Last updated: ((( updated )))}
+
+\section{Education}
+\cventry{PhD in Artificial Intelligence}{2021--2025}{University of Limerick, Ireland}
+\cvmeta{Thesis}{\textit{Efficient Hyperparameter Optimization for Streamlining Model Training in Machine and Deep Learning}}
+\cvmeta{Supervisors}{Prof Conor Ryan and Prof Meghana Kshirsagar}
+
+\cventry{Bachelor of Engineering in Computer Science and Engineering}{2016--2020}{Government College of Engineering, Aurangabad, India}
+% \cvmeta{Ranking}{2nd of 70 students (A++)}
+\cvmeta{Thesis}{\textit{Blockchain-Based Systems for Secure Handling of First Information Reports}}
+\cvmeta{Supervisor}{Dr Vivek Kshirsagar}
+
+\section{Professional Experience}
+\cventry{Level 2 Postdoctoral Researcher}{2025--Present}{National Kidney Disease Surveillance System (NKDSS), University of Limerick, Ireland}
+\cvmeta{Line managers}{Prof Austin Stack and Dr Leonard Browne}
+\begin{itemize}
+  \item Apply advanced data analysis and machine learning methods to quantify the burden and impact of chronic kidney disease in Ireland and support evidence-based prevention and intervention strategies.
+  \item Develop a secure, linked health-data infrastructure integrating national hospital, registry, and population data to track Chronic Kidney Disease (CKD) prevalence, risk factors, outcomes, and quality of care.
+\end{itemize}
+
+\cventry{PhD Researcher}{2021--2025}{Biocomputing and Developmental Systems Research Group, University of Limerick, Ireland}
+\cvmeta{Supervisors}{Prof Conor Ryan and Prof Meghana Kshirsagar}
+\begin{itemize}
+  \item Developed three hyperparameter-optimisation frameworks -- HyperEstimator, HyperGE, and PurGE -- achieving up to 2.2$\times$ faster convergence, 40\% energy savings, and 30\% lower memory use than comparator methods.
+  \item Co-authored ten peer-reviewed publications and presented research through invited talks, technical presentations, workshops, and posters.
+  \item Served as a teaching assistant and mentored undergraduate, master's, and internship projects in machine learning, software development, and applied AI.
+  \item Managed the departmental NVIDIA A100 GPU server, including access control, resource allocation, and support for high-performance AI workloads with over 50 active users.
+\end{itemize}
+
+\cventry{Trainee Analyst}{2020--2021}{Principal Global Services, India}
+\cvmeta{Manager}{Mr Shridhar More}
+\begin{itemize}
+  \item Automated health insurance workflows through full-stack Salesforce development, improving process efficiency by approximately 20\%.
+  \item Invited to join the core development team within six months in recognition of commitment and technical contributions.
+  \item Collaborated with international cross-functional teams on feature development and presented project outcomes and technical contributions to diverse stakeholders.
+\end{itemize}
+
+\cventry{Research Intern}{2019--2021}{Biocomputing and Developmental Systems Research Group, University of Limerick, Ireland}
+\cvmeta{Supervisors}{Prof Conor Ryan and Dr Meghana Kshirsagar}
+\begin{itemize}
+  \item Developed a cryptographically secure pseudo-random number generator with Intel, validated against NIST SP 800-22 and published in \textit{Scientific Reports}.
+  \item Built an Ethereum- and Neo4j-based framework for secure electronic health-record sharing under an EU Horizon 2020 project, with results published in \textit{Frontiers in Blockchain}.
+\end{itemize}
+
+\section{Funding}
+\cventry{Unleashing the Power of AI and Digital Twins in Emergency Care: A Vision for the Future (ALTER)}{2023--2025}{Research Ireland National Challenge Fund, Digital for Resilience}
+\cvmeta{Value}{\texteuro 220,895}
+\cvmeta{Investigators}{Prof Meghana Kshirsagar (PI) and Dr Alison O'Connor (Co-PI)}
+\cvmeta{Role}{Named collaborator}
+
+\cventry{Artificial Intelligence and Digital Twins in Emergency Care: A Vision for the Future}{2023--2025}{EuroHPC National Competence Centre (EuroCC), run by the Irish Centre for High-End Computing (ICHEC), Ireland}
+\cvmeta{Value}{\texteuro 70,000}
+\cvmeta{Investigators}{Dr Alison O'Connor (PI) and Prof Meghana Kshirsagar (Co-PI)}
+\cvmeta{Role}{Named collaborator}
+
+\section{Honours and Awards}
+((= Filled from content/awards.yaml =))
+((* for item in awards *))
+((( item )))
+
+((* endfor *))
+\section{Scholarships and Fellowships}
+\cventry{SPECIES Scholarship}{2026}{}
+\cvdesc{Funded three-month research visit to J\"onk\"oping University, Sweden (\texteuro 900 per month).}
+
+\cventry{Doctoral Fellowship}{2021--2025}{Research Ireland Centre for Research Training in Artificial Intelligence}
+\cvdesc{\texteuro 22,000 annual stipend with additional travel, training, and equipment support.}
+
+\cventry{Undergraduate Fellowship}{2016--2020}{Vidyadaan Sahayyak Mandal, Thane, India}
+\cvdesc{INR 50,000 per year.}
+
+\section{Teaching Experience}
+((= Filled from content/teaching.yaml, one subsection per role =))
+((* for heading, items in teaching *))
+\subsection{((( heading )))}
+((* for item in items *))
+((( item )))
+
+((* endfor *))
+((* endfor *))
+\section{Supervision and Mentoring}
+\subsection{Master's Students}
+\cventry{Joseph Burke}{2026}{MSc Machine Learning and Artificial Intelligence, Department of Computer Science and Information Systems, University of Limerick, Ireland}
+\cvmeta{Role}{Primary supervisor}
+
+\cventry{Ramasamy Subramaniam}{2026}{MSc Machine Learning and Artificial Intelligence, Department of Computer Science and Information Systems, University of Limerick, Ireland}
+\cvmeta{Role}{Co-supervisor}
+
+\cventry{Manthan Limbachiya}{2026}{MSc Machine Learning and Artificial Intelligence, Department of Computer Science and Information Systems, University of Limerick, Ireland}
+\cvmeta{Role}{Co-supervisor}
+
+\cventry{Ivor D'Souza}{2025}{MSc Software Development, Department of Computer Science and Information Systems, University of Limerick, Ireland}
+\cvmeta{Role}{Secondary supervisor; primary supervisor Prof Meghana Kshirsagar}
+
+\cventry{Mahika Jaguste}{2025}{MSc Software Development, Department of Computer Science and Information Systems, University of Limerick, Ireland}
+\cvmeta{Role}{Secondary supervisor; primary supervisor Prof Meghana Kshirsagar}
+
+\subsection{Bachelor's Students}
+\cventry{Rahul Alam}{2024--2025}{Department of Computer Science and Information Systems, University of Limerick, Ireland}
+\cvmeta{Thesis}{\textit{Ethnicity-Aware Diabetes Risk Assessment Using Machine Learning}}
+\cvmeta{Role}{Primary supervisor}
+
+\subsection{Research Interns}
+\cventry{Shravani Rajguru, Hrushabh Kale, Prithviraj Chavan, and Nishant Shanmugam}{2022--2023}{Government College of Engineering, Aurangabad, India}
+\cvmeta{Project}{\textit{DECART: Planning for Decarbonising Transport Sector with Predictive Analytics -- An Irish Case Study}}
+\cvmeta{Role}{Technical mentor; primary supervisor Prof Meghana Kshirsagar}
+
+\cventry{Vedant Karmalkar, Abhishek Hole, Kunika Kulkarni, and Mayuresh Khemnar}{2021--2022}{Maharashtra Institute of Technology, Aurangabad, India}
+\cvmeta{Project}{\textit{Blockchain-Powered Data Sharing for Electronic Health Records}}
+\cvmeta{Role}{Technical mentor; primary supervisor Prof Meghana Kshirsagar}
+
+((= Filled from content/talks.yaml (entries with "cv: Invited Talks" or "cv: Workshops") =))
+((* for section, items in talks *))
+\section{((( section )))}
+((* for item in items *))
+((( item )))
+
+((* endfor *))
+((* endfor *))
+\section{Institutional Service}
+% Service within her own institutions, newest institution first (University of Limerick, then GECA).
+% PLACEHOLDER entries are hidden from the CV unless the build is run with CV_PLACEHOLDERS=1 (see scripts/build-cv.py).
+% To publish a real entry: fill it in and move it OUT of the if/endif block (or delete the block lines around it).
+((* if show_placeholders *))
+% TODO: Gauri to fill in. Replace Role, Committee or Unit and the dates; copy the block for more entries. Must not go live while present.
+\cventry{Role}{Mon YYYY -- Mon YYYY}{Committee or Unit, University of Limerick, Ireland} % TODO: Gauri to fill in
+
+((* endif *))
+
+\cventry{Website Administrator}{}{Biocomputing and Developmental Systems Research Group, University of Limerick, Ireland}
+
+\cventry{HPC Administrator}{}{NVIDIA A100 GPU server, Department of Computer Science and Information Systems, University of Limerick, Ireland}
+
+((* if show_placeholders *))
+% TODO: Gauri to fill in.
+\cventry{Role}{Mon YYYY -- Mon YYYY}{Committee or Unit, Government College of Engineering, Aurangabad (GECA), India} % TODO: Gauri to fill in
+
+((* endif *))
+\section{Professional and Community Service}
+\subsection{Organisation}
+\begin{itemize}
+  \cvitem{Organiser, Breaking Barriers: Addressing Algorithmic Bias for Equitable Cancer Care Access.}{2025}
+  \cvitem{Webmaster, IEEE International Conference on Blockchain and Cryptocurrency.}{2023}
+  \cvitem{Co-organiser, Evathon: International Evolutionary Hackathon.}{2021}
+  \cvitem{Organiser, Smart Aurangabad Hackathon.}{2019}
+  \cvitem{Organiser, Workshop on Blockchain Technologies.}{2018}
+  \cvitem{Organiser, Startup Weekend.}{2018}
+\end{itemize}
+\subsection{Peer Review}
+\begin{itemize}
+  \cvitem{AAAI 2027; AIS 2026; ICAART 2026; PPSN 2026; UK AI 2026; AAMAS 2025; BioC 2023; ECCV 2022.}{}
+\end{itemize}
+
+\section{Media, Outreach, and Volunteering}
+\begin{itemize}
+  \cvitem{Technical mentor, Vidyadaan Sahayyak Mandal, Thane, India.}{2020--Present}
+  \cvitem{Featured in \textit{Business Post} as one of the ``30 Under 30: Top People in Tech 2025''.}{2025}
+  \cvitem{Technical volunteer, Leveraging LLMs for Data Governance, Fidelity Investments; delivered by Prof Meghana Kshirsagar and Dr Vimal Kumar.}{21 Oct 2024}
+  \cvitem{Volunteer, Patient and Public Involvement Workshop, University of Limerick, Ireland.}{2023}
+  \cvitem{Teacher and volunteer, Share a Book India Association.}{2019--2020}
+  \cvitem{Open-source contribution with atoti; author of the Medium blog \textit{Insights on Modern Computation}.}{}
+\end{itemize}
+
+\section{Training and Certification}
+\begin{itemize}
+  \cvitem{Microcredential, \textit{Introduction to Real-World Data in Cancer Clinical Research}.}{2024}
+  \cvitem{Oxford Machine Learning Summer School.}{2023}
+  \cvitem{Coursera, \textit{Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimization}.}{2019}
+  \cvitem{Coursera, \textit{Convolutional Neural Networks}.}{2019}
+\end{itemize}
+
+\section{Languages}
+\begin{itemize}
+  \cvitem{English (professional), Hindi (professional), Marathi (professional).}{}
+\end{itemize}
+
+\section{Publications}
+\subsection{In Preparation}
+\begin{itemize}
+  \cvitem{\textit{Shiny Apps for Patient Flow and Outcome Analysis with MIMIC-III}. Book.}{}
+  \cvitem{``Artificial Intelligence Powered Decision Support System for Sustainable Food Packaging of Breakfast Food Items.'' Journal article.}{}
+  \cvitem{``Prime-Generating Symbolic Regression through Grammar-Guided Search Space Pruning.'' Journal article.}{}
+\end{itemize}
+
+((= Filled from content/publications.bib; which papers, and in which subsection, is set by "cv" in content/publications.meta.json =))
+((* for heading, items in publications *))
+\subsection{((( heading )))}
+((* for item in items *))
+((( item )))
+((* endfor *))
+
+((* endfor *))
+
+% \section{References}
+% \begin{tabularx}{\textwidth}{@{}X X@{}}
+% \textbf{Dr Leonard Browne} & \textbf{Prof Meghana Kshirsagar}\\
+% Senior Research Fellow, University of Limerick & Associate Professor in Artificial Intelligence, University of Limerick\\
+% \href{mailto:leonard.browne@ul.ie}{leonard.browne@ul.ie} & \href{mailto:meghana.kshirsagar@ul.ie}{meghana.kshirsagar@ul.ie}
+% \end{tabularx}
+
+\end{document}

@@ -1,0 +1,91 @@
+[
+  {
+    "code": "CS6604",
+    "name": "Applications of Artificial Intelligence in Healthcare",
+    "years": "Fall 2026",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Instructor",
+    "level": "Graduate",
+    "description": "15 students (Fall 2026)."
+  },
+  {
+    "code": "CS6472",
+    "name": "Research Methods and Specifications",
+    "years": "Spring 2025, Spring 2026",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Instructor",
+    "level": "Graduate",
+    "description": "Sole responsibility for the module; 36 students (Spring 2025) and 64 students (Spring 2026)."
+  },
+  {
+    "code": "CS4136",
+    "name": "Topics in AI",
+    "years": "Spring 2025",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Teaching Assistant",
+    "level": "Undergraduate",
+    "description": "Module led by Prof Meghana Kshirsagar."
+  },
+  {
+    "code": "CS4207",
+    "name": "Advanced Programming Concepts and Practices",
+    "years": "Fall 2024",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Teaching Assistant",
+    "level": "Undergraduate",
+    "description": "Module led by Prof Meghana Kshirsagar."
+  },
+  {
+    "code": "CS4221",
+    "name": "Foundations of Computer Science",
+    "years": "Fall 2022, Fall 2023, Fall 2024",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Teaching Assistant",
+    "level": "Undergraduate",
+    "description": "Module led by Prof Conor Ryan (with Prof Meghana Kshirsagar in Fall 2023)."
+  },
+  {
+    "code": "CS6163",
+    "name": "Advanced Topics Seminars and Project",
+    "years": "Spring 2024",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Moderator",
+    "level": "Graduate",
+    "description": "Module led by Dr Tabea DeWille."
+  },
+  {
+    "code": "CS4222",
+    "name": "Software Development",
+    "years": "Spring 2024",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Teaching Assistant",
+    "level": "Undergraduate",
+    "description": "Module led by Prof Meghana Kshirsagar."
+  },
+  {
+    "code": "CS4116",
+    "name": "Software Development Project",
+    "years": "Spring 2022, Spring 2023, Spring 2024",
+    "institution": "University of Limerick",
+    "location": "Ireland",
+    "role": "Teaching Assistant",
+    "level": "Undergraduate",
+    "description": "Module led by Prof Conor Ryan."
+  },
+  {
+    "name": "Blockchain Technologies",
+    "years": "Fall 2022",
+    "institution": "Maharashtra Institute of Technology",
+    "location": "Aurangabad, India",
+    "role": "Instructor",
+    "level": "Undergraduate",
+    "description": "Module leader with sole responsibility for the module, taught online; 65 students (Fall 2022)."
+  }
+]
