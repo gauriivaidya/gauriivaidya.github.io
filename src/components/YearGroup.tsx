@@ -8,7 +8,7 @@ export function YearGroup({ id, year, children }: { id: string; year: ReactNode;
     </section>
   );
 }
-/** One row: teal badge on the left, content on the right. */
+/** One row: brand badge on the left, content on the right. */
 export function Row({ badge, title, className, children, ...data }: { badge: string; title?: string; className?: string; children: ReactNode } & Record<`data-${string}`, string | number>) {
   return (
     <li className={className ? `row ${className}` : "row"} {...data}>

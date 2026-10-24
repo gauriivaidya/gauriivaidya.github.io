@@ -5,8 +5,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
-const { render, meta, ROUTE_PATHS, ALIASES } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.js")).href);
-const template = readFileSync(join(dist, "index.html"), "utf8");
+const { render, meta, ROUTE_PATHS, ALIASES, OG_IMAGE, OG_IMAGE_ALT } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.js")).href);
+// Share image follows the PORTRAIT switch in src/data/home.ts (photo card, or the GV brand card when there is no photo).
+const template = readFileSync(join(dist, "index.html"), "utf8")
+  .replace(/(property="og:image" content=")[^"]*/, `$1https://gauriivaidya.github.io${OG_IMAGE}`)
+  .replace(/(property="og:image:alt" content=")[^"]*/, `$1${OG_IMAGE_ALT.replace(/"/g, "&quot;")}`);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 const page = (path, noindex = false) => {

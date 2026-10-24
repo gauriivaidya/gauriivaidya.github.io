@@ -1,4 +1,4 @@
 Inter (Rasmus Andersson) and Montserrat (Julieta Ulanovsky et al.) are licensed under the SIL Open Font License 1.1.
 Files here are Latin subsets of the variable fonts, weight-limited (Inter 400–600, Montserrat 500–600).
 https://openfontlicense.org
-Great Vibes (Copyright 2015 The Great Vibes Pro Project Authors) is licensed under the SIL Open Font License 1.1; greatvibes-logo.woff2 is subset to the glyphs in "Gauri Vaidya".
+Raleway (Copyright 2010 The Raleway Project Authors, Reserved Font Name "Raleway") is licensed under the SIL Open Font License 1.1; raleway-latin-var.woff2 is a Latin subset of the variable font, weight-limited to 400–700. Source: github.com/google/fonts/tree/main/ofl/raleway

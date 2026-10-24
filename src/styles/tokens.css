@@ -1,11 +1,10 @@
-@font-face{font-family:"Inter";src:url(/fonts/inter-latin-var.woff2) format("woff2");font-weight:400 600;font-style:normal;font-display:swap}
-@font-face{font-family:"Montserrat";src:url(/fonts/montserrat-latin-var.woff2) format("woff2");font-weight:500 600;font-style:normal;font-display:swap}
-@font-face{font-family:"Great Vibes";src:url(/fonts/greatvibes-logo.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+/* Raleway (SIL OFL 1.1), the typeface of joonsungpark.com, used there for both headings and body. Self-hosted Latin subset, variable 400–700. */
+@font-face{font-family:"Raleway";src:url(/fonts/raleway-latin-var.woff2) format("woff2");font-weight:400 700;font-style:normal;font-display:swap}
 :root{
   color-scheme:light;
   --bg:#FAFAF7;--bg-2:#F3F2EE;--pill:#FFFFFF;--text:#1C1B19;--text-2:#57534D;--line:#E6E4DE;
-  --accent:#0F6E6E;--on-accent:#FFFFFF;--accent-soft:#E3F0EE;--accent-line:#C9E1DD;--year:#5A9690;
-  --font-head:"Montserrat",system-ui,sans-serif;--font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --accent:#A84B29;--on-accent:#FFFFFF;--brand:#A84B29;--on-brand:#FFFFFF;--brand-text:#A84B29;--accent-soft:#F6E7E0;--accent-line:#EBCDBF;--year:#A05A3B;
+  --font-head:"Raleway",system-ui,sans-serif;--font-body:"Raleway",system-ui,-apple-system,"Segoe UI",sans-serif;
   /* type scale (root 16px): 12 · 14 · 15 · 16 · 17 · 18 · 20 · 24 · 30–36 */
   --fs-2xs:.75rem;--fs-xs:.875rem;--fs-sm:.9375rem;--fs-ui:1rem;--fs-base:1.0625rem;--fs-md:1.125rem;--fs-lg:1.25rem;--fs-xl:1.5rem;--fs-2xl:clamp(1.875rem,1.5rem + 1.2vw,2.25rem);
   --lh-body:1.65;--lh-snug:1.4;--lh-tight:1.22;
@@ -14,5 +13,5 @@
 :root[data-theme=dark]{
   color-scheme:dark;
   --bg:#111110;--bg-2:#1A1A18;--pill:#1C1C1A;--text:#ECEBE7;--text-2:#A8A49C;--line:#2B2A27;
-  --accent:#5FB3AA;--on-accent:#111110;--accent-soft:#142624;--accent-line:#24433F;--year:#3F7D77;
+  --accent:#E0896A;--on-accent:#111110;--brand:#A84B29;--on-brand:#FFFFFF;--brand-text:#E0896A;--accent-soft:#2A1A14;--accent-line:#4A2E22;--year:#BD7A5E;
 }

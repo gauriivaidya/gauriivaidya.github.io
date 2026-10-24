@@ -16,14 +16,14 @@ export function SocialRow() {
     </ul>
   );
 }
-const SRC = (f: string) => [96, 192, 200, 340].map((w) => `/images/portrait-${w}.${f} ${w}w`).join(", ");
+const SRC = (base: string, f: string) => [96, 192, 200, 340, 400].map((w) => `${base}-${w}.${f} ${w}w`).join(", ");
 /** Responsive portrait: AVIF → WebP → JPEG fallback. */
-export function Portrait({ className, sizes }: { className: string; sizes: string }) {
+export function Portrait({ src, className, sizes }: { src: string; className: string; sizes: string }) {
   return (
     <picture className={`portrait ${className}`}>
-      <source type="image/avif" srcSet={SRC("avif")} sizes={sizes} />
-      <source type="image/webp" srcSet={SRC("webp")} sizes={sizes} />
-      <img src="/images/portrait-340.jpg" width="200" height="200" alt="Gauri Vaidya" fetchPriority="high" decoding="async" />
+      <source type="image/avif" srcSet={SRC(src, "avif")} sizes={sizes} />
+      <source type="image/webp" srcSet={SRC(src, "webp")} sizes={sizes} />
+      <img src={`${src}-340.jpg`} width="200" height="200" alt="Gauri Vaidya" fetchPriority="high" decoding="async" />
     </picture>
   );
 }

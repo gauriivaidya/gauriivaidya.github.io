@@ -1,6 +1,8 @@
 // Real-browser end-to-end checks against the production build (vite preview / any static server).
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+// Mirrors the PORTRAIT switch in src/data/home.ts (null → no photo).
+const PORTRAIT = JSON.parse((readFileSync(new URL("../src/data/home.ts", import.meta.url), "utf8").match(/export const PORTRAIT: string \| null = (null|"[^"]*")/) ?? [, "null"])[1]);
 import { chromium } from "playwright-core";
 const B = process.env.BASE ?? "http://localhost:4173";
 const browser = await chromium.launch({ executablePath: process.env.CHROME ?? "/usr/bin/google-chrome", args: ["--no-sandbox"] });
@@ -43,29 +45,100 @@ await t("header nav: About · Publications · Teaching · Talks & Events · Cont
   await page.goBack(); await page.waitForURL(B + "/"); ok(await page.locator(".about-head").isVisible(), "home after back");
   for (const w of [1000, 1440]) { await page.setViewportSize({ width: w, height: 900 }); await page.goto(B + "/"); const ys = await page.locator(".site-nav a").evaluateAll((l) => l.map((a) => Math.round(a.getBoundingClientRect().top))); ok(new Set(ys).size === 1, "nav on one line at " + w); }
 });
-await t("home = about: name, role, portrait right with affiliation, long bio, copy bios, no Recent/tagline", async () => {
+await t("home = about: hero (optional photo left, name, role, affiliation, icons), bio ¶1 + accolades verbatim (no perspective para), Background story section, copy bios, no Recent/tagline", async () => {
   await page.goto(B + "/");
   eq((await page.locator("h1").textContent()).trim(), "Gauri Vaidya");
-  eq((await page.locator(".about-role").textContent()).trim(), "Senior Postdoctoral Researcher, NKDSS, School of Medicine, University of Limerick");
-  const [img, txt] = [await page.locator(".profile").boundingBox(), await page.locator(".about-text p").first().boundingBox()]; ok(img.x > txt.x + 400 && Math.abs(img.y - txt.y) < 20, "portrait on the right, level with the bio");
-  eq((await page.locator(".profile figcaption span").allTextContents()).join("|"), "National Kidney Disease Surveillance System|School of Medicine|University of Limerick|Limerick, Ireland");
-  const im = page.locator(".profile img"); ok(await im.evaluate((i) => i.complete && i.naturalWidth > 0), "portrait loaded"); ok(/\.(avif|webp)$/.test(await im.evaluate((i) => i.currentSrc)), "modern format");
-  eq(await page.locator(".about-text p").count(), 3, "long bio paras");
-  ok((await page.locator(".about-text").textContent()).startsWith("Dr Gauri Vaidya is a Senior Postdoctoral Researcher with the National Kidney Disease Surveillance System"), "long bio");
+  eq((await page.locator(".about-role").textContent()).trim(), "Senior Postdoctoral Researcher");
+  eq((await page.locator(".hero-aff").textContent()).trim(), "National Kidney Disease Surveillance System · School of Medicine, University of Limerick, Ireland");
+  if (PORTRAIT) {
+    const [img, h1] = [await page.locator(".profile").boundingBox(), await page.locator("h1").boundingBox()]; ok(img.x + img.width < h1.x, "photo left of the name");
+    const im = page.locator(".profile img"); ok(await im.evaluate((i) => i.complete && i.naturalWidth > 0), "portrait loaded"); ok(/\.(avif|webp)$/.test(await im.evaluate((i) => i.currentSrc)), "modern format");
+    const sh = await im.evaluate((i) => { const f = i.closest(".hero-photo"), b = getComputedStyle(f, "::before"), r = i.getBoundingClientRect();
+      return { rad: getComputedStyle(i).borderRadius, w: Math.round(r.width), h: Math.round(r.height), before: b.content, shadow: getComputedStyle(i).boxShadow }; });
+    ok((sh.rad === "50%" || parseFloat(sh.rad) >= sh.w / 2) && sh.w === sh.h, "circular portrait " + JSON.stringify(sh));
+    ok(sh.before === "none" || sh.before === "normal", "no offset block behind the portrait"); eq(sh.shadow, "none", "no heavy shadow"); eq(sh.w, 200, "desktop portrait 200px");
+  } else {
+    eq(await page.locator("main .profile, main picture, main img").count(), 0, "no photo and no placeholder in the hero");
+    ok(await page.locator(".hero.no-photo").isVisible(), "type-only hero");
+  }
+  const paras = await page.locator(".about-text p").allTextContents();
+  eq(paras.length, 2, "bio para 1 + accolades only");
+  const bio = readFileSync(new URL("../src/data/bio.ts", import.meta.url), "utf8");
+  ok(paras[0].startsWith("Dr Gauri Vaidya is a Senior Postdoctoral Researcher with the National Kidney Disease Surveillance System") && bio.includes(paras[0]), "background = long bio para 1, verbatim");
+  ok(paras[1].startsWith("Gauri has received several national and international accolades") && bio.includes(paras[1]), "achievements = long bio para 3, verbatim, in prose");
+  eq(await page.locator(".perspective").count(), 0, "no perspective paragraph");
+  const homeTs = readFileSync(new URL("../src/data/home.ts", import.meta.url), "utf8");
+  ok(!/PERSPECTIVE_DRAFT|perspective =/.test(homeTs), "perspective data removed");
+  const bgParas = await page.locator("section[aria-labelledby=background-h] .background p").allTextContents();
+  eq(bgParas.length, 2, "Background = two short paragraphs");
+  ok(bgParas[0].replace(/^\s*Draft\s*/i, "").startsWith("Gauri began in computer science") && /Government College of Engineering, Aurangabad/.test(bgParas[0]), "Background para 1 (early path)");
+  ok(/PhD in Artificial Intelligence at the University of Limerick \(2021–2025\)/.test(bgParas[1]) && /Senior Postdoctoral Researcher/.test(bgParas[1]), "Background para 2 (PhD → current role)");
+  ok(bgParas.every((t) => !/\b(I|my|me)\b/.test(t)), "Background in third person");
+  eq(await page.locator("section[aria-labelledby=background-h] .draft").count(), /BACKGROUND_DRAFT = true/.test(homeTs) ? 1 : 0, "draft marker follows BACKGROUND_DRAFT");
+  if (PORTRAIT) { const srcset = await page.locator(".profile source[type='image/avif']").getAttribute("srcset");
+  ok(/portrait-400\.avif 400w/.test(srcset) && /portrait-400\.webp 400w/.test(await page.locator(".profile source[type='image/webp']").getAttribute("srcset")), "srcset includes 400w " + srcset); }
+  for (const i of [0, 1]) ok(await page.locator(".about-text p").nth(i).isVisible(), "para visible " + i);
+  eq(await page.locator(".recog, .stats, .vision").count(), 0, "no stats/recognition strip, no per-card vision lines");
   await page.click("text=Copy short bio"); await page.locator(".copy-btn", { hasText: "Copied" }).waitFor();
   ok((await page.evaluate(() => navigator.clipboard.readText())).startsWith("Gauri Vaidya is a Senior Postdoctoral Researcher"), "short bio copied");
   await page.waitForTimeout(2300); await page.click("text=Copy long bio"); await page.locator(".copy-btn", { hasText: "Copied" }).waitFor();
   eq((await page.evaluate(() => navigator.clipboard.readText())).split("\n\n").length, 3, "long bio copied");
+  ok(!/open to collaborations/.test(await page.evaluate(() => navigator.clipboard.readText())), "collab line not in copied long bio");
+  ok(!/open to collaborations/.test(readFileSync(new URL("../src/data/bio.ts", import.meta.url), "utf8")), "collab line not in bio.ts (short/long copy text)");
+  const bioLinks = await page.evaluate(() => [...document.querySelectorAll(".about-text a")].map((a) => [a.textContent, a.getAttribute("href"), a.target, a.rel, getComputedStyle(a).color]));
+  const wantLinks = [["National Kidney Disease Surveillance System", "https://www.nkdss.ie/"], ["University of Limerick", "https://www.ul.ie/"], ["Business Post 30 Under 30: Top People in Tech 2025", "https://www.businesspost.ie/article/30-under-30-meet-irelands-top-tech-innovators/"], ["SPECIES International Research Scholarship", "https://species-society.org/scholarships-previous-years/"], ["atoti", "https://medium.com/atoti/meghana-and-gauri-explaining-olap-concepts-with-practical-examples-aedd541e6294"]];
+  eq(JSON.stringify(bioLinks.map(([t, h]) => [t, h])), JSON.stringify(wantLinks), "intro bio links (text + URL)");
+  ok(bioLinks.every(([, , t, r]) => t === "_blank" && r.includes("noopener")), "intro bio links open in new tab with rel=noopener");
+  const brand = await page.evaluate(() => getComputedStyle(document.querySelector(".contact-row a[href^='mailto']")).color);
+  ok(bioLinks.every((l) => l[4] === brand), "intro bio links are terracotta");
+  ok(!(await page.locator(".about-text a", { hasText: "Times of India" }).count()), "Times of India unlinked (no verified article)");
+  ok(!/https?:|<a/.test(await page.evaluate(() => navigator.clipboard.readText())), "copied long bio is plain text (no URLs/markup)");
+  const collab = page.locator(".hero-bio .collab");
+  for (const theme of ["light", "dark"]) {
+    if (theme === "dark") await page.evaluate(() => document.documentElement.setAttribute("data-theme", "dark"));
+    const st = await page.evaluate(() => [...document.querySelectorAll(".about-text p, .hero-bio .collab")].map((p) => { const c = getComputedStyle(p); return [c.fontSize, c.fontWeight, c.color, c.lineHeight, c.fontFamily].join("|"); }));
+    eq(st.length, 3, "3 intro paragraphs (" + theme + ")"); ok(st.every((x) => x === st[0]), "intro paragraphs share font size/weight/colour/line-height (" + theme + "): " + st.join(" ; "));
+    const gaps = await page.evaluate(() => { const ps = [...document.querySelectorAll(".about-text p, .hero-bio .collab")].map((p) => p.getBoundingClientRect()); return [ps[1].top - ps[0].bottom, ps[2].top - ps[1].bottom].map(Math.round); });
+    eq(gaps[0], gaps[1], "consistent intro paragraph spacing (" + theme + ")");
+  }
+  await page.evaluate(() => { document.documentElement.dataset.theme = "light"; });
+  eq((await collab.textContent()).trim(), "She is always open to collaborations, so feel free to get in touch.", "collab sentence");
+  const intro = await page.evaluate(() => { const ps = [...document.querySelectorAll(".hero-bio p")].filter((p) => !p.classList.contains("bio-copy")); return ps[ps.length - 1].className; });
+  eq(intro, "collab", "collab is the last line of the intro");
+  const cl = collab.locator("a"); eq(await cl.textContent(), "get in touch"); eq(await cl.getAttribute("href"), "#contact");
+  eq(await page.locator("section#contact h2#contact-h").count(), 1, "#contact anchor exists on the Get in touch section");
+  eq(await cl.evaluate((a) => getComputedStyle(a).color), await page.evaluate(() => getComputedStyle(document.querySelector(".contact-row a[href^='mailto']")).color), "terracotta link colour (same as other links)");
+  await cl.click(); await page.waitForTimeout(900);
+  ok(await page.evaluate(() => { const r = document.getElementById("contact").getBoundingClientRect(); return scrollY > 0 && r.top >= -2 && r.bottom <= innerHeight + 2; }), "scrolled to Get in touch (in view)");
+  eq(await page.evaluate(() => document.activeElement?.id), "contact-h", "focus moved to the section heading"); eq(new URL(page.url()).hash, "#contact");
+  await page.evaluate(() => scrollTo(0, 0));
   ok(!(await page.locator("main").textContent()).includes("Recent"), "no Recent"); ok(!/news/i.test(await page.locator("main h2").allTextContents().then((x) => x.join())), "no news");
   ok(!(await page.content()).includes("I use data and AI"), "no tagline");
 });
-await t("home: no selected-publications section; social icon row last", async () => {
+await t("home overview: hero, Research (4 cards), Get in touch only; icons; no personal email/CV", async () => {
   await page.goto(B + "/");
+  eq((await page.locator("main .snap-head h2").allTextContents()).map((x) => x.trim()).join("|"), "Research|Background|Get in touch");
+  eq((await page.locator(".see-all").evaluateAll((l) => l.map((a) => a.getAttribute("href")))).join("|"), "/contact/");
+  eq((await page.locator(".research-list h3").allTextContents()).join("|"), "Kidney disease|Optimisation, AI & Large-Scale Data Analytics", "2 research cards");
+  eq((await page.locator(".research-list .eyebrow").allTextContents()).join("|"), "Current work|Expertise");
+  ok((await page.locator(".research-list li").nth(1).textContent()).includes("blockchain, knowledge graphs, large language models and agentic AI"), "Expertise card lists agentic AI");
+  eq(await page.locator(".draft").count(), 0, "no draft markers left on the home page (Background approved)");
+  eq((await page.locator(".research-list h3 a").evaluateAll((l) => l.map((a) => a.getAttribute("href")))).join("|"), "/publications/|/publications/?topic=expertise");
+  eq(await page.locator(".research-list .tile-brand svg.icon").count(), 2, "brand icon tiles");
+  const shapes = await page.evaluate(() => [...document.querySelectorAll(".snap h2")].map((h) => getComputedStyle(h, "::before").borderRadius).concat([...document.querySelectorAll(".research-list .tile")].map((t) => { const c = getComputedStyle(t), r = t.getBoundingClientRect(); return Math.round(r.width) === Math.round(r.height) ? c.borderRadius : "not-square-box"; })));
+  ok(shapes.length >= 5 && shapes.every((r) => r === "50%"), "section markers and icon tiles are round " + shapes.join());
+  ok(!/GPU|high computing/i.test(await page.locator("main").textContent()), "GPU sentence removed from the bio");
+  await page.click(".research-list h3 a >> nth=1"); await page.waitForURL(/topic=expertise/); await page.locator(".pub").first().waitFor();
+  const shown = await page.locator(".pub").count(); ok(shown > 0 && shown < 28, "expertise filter narrows the list " + shown); await page.goto(B + "/");
+  eq(await page.locator("main .lines, main .modules, main .press").count(), 0, "no publications/teaching/talks/recognition snapshots");
+  ok(await page.locator("main .book a").isVisible(), "booking button");
   eq(await page.locator("main .pub, main .selected, main .rows").count(), 0, "no publication rows on home");
-  ok(!/selected publications/i.test(await page.locator("main").textContent()), "no Selected publications heading");
   const s = page.locator("ul.social a"); eq((await s.evaluateAll((l) => l.map((a) => a.getAttribute("aria-label")))).join("|"), "Email|Google Scholar|ORCID|GitHub|LinkedIn");
   eq(await s.locator("svg.icon").count(), 5, "icons"); eq(await page.locator('ul.social a[href="mailto:gauri.vaidya@ul.ie"]').count(), 1, "email");
-  const [bio, soc] = [await page.locator(".about-body").boundingBox(), await page.locator("ul.social").boundingBox()]; ok(soc.y > bio.y + bio.height - 1, "social at bottom");
+  const html = await page.content(); ok(!html.includes("gaurivaidya.work@gmail.com"), "personal email only on Contact"); ok(!/cv\.pdf|\/cv\//i.test(html), "no CV link");
+  eq(await page.locator(".tile-fig, .credit").count(), 0, "no paper-figure thumbnails or credits");
+  for (const w of [390, 1440]) { await page.setViewportSize({ width: w, height: 900 }); ok(!(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)), "hscroll " + w); }
+  await page.setViewportSize({ width: 1440, height: 900 });
 });
 await t("uniform top nav on every page, no sidebar, aligned content", async () => {
   await page.goto(B + "/"); const x0 = await page.locator(".logo").evaluate((e) => e.getBoundingClientRect().left);
@@ -74,7 +147,8 @@ await t("uniform top nav on every page, no sidebar, aligned content", async () =
     eq(await page.locator(".sidebar").count(), 0, "sidebar " + r);
     eq(await page.locator(".site-header .top-nav a").count(), 5, "nav " + r);
     const lx = await page.locator(".logo").evaluate((e) => e.getBoundingClientRect().left);
-    const hx = await page.locator("h1").evaluate((e) => e.getBoundingClientRect().left);
+    // home: the hero block (photo) starts at the logo line; inner pages: the h1 does
+    const hx = await page.locator(r === "/" || r === "/about/" ? ".hero" : "h1").evaluate((e) => e.getBoundingClientRect().left);
     eq(Math.round(lx), Math.round(x0), "logo x " + r); eq(Math.round(hx), Math.round(x0), "h1 x " + r);
   }
 });
@@ -103,12 +177,12 @@ await t("publications: checkbox years + types with search, sort, active chips, c
   await page.selectOption("#pub-sort", "newest");
   await page.check('#pub-types input[value="book chapter"]'); await page.check('#pub-years input[value="2026"]'); eq(await n(), 0); ok(await page.locator(".empty").isVisible(), "empty");
 });
-await t("publications: al-folio rows — year label left, teal venue badge, title/authors/venue, only real URLs become buttons", async () => {
+await t("publications: al-folio rows — year label left, terracotta venue badge, title/authors/venue, only real URLs become buttons", async () => {
   await page.goto(B + "/publications/");
   const g = page.locator(".yg").first(); const [yb, lb] = [await g.locator(".yg-year").boundingBox(), await g.locator(".rows").boundingBox()]; ok(yb.x + yb.width <= lb.x, "year left of list");
   const [ys, hs] = [parseFloat(await g.locator(".yg-year").evaluate((e) => getComputedStyle(e).fontSize)), parseFloat(await page.locator("h1").evaluate((e) => getComputedStyle(e).fontSize))]; ok(ys >= 22 && ys < hs * 0.75, "year label clear but below h1 " + ys + "/" + hs);
   const row = page.locator(".pub").first(); const [bd, bo] = [await row.locator(".badge").boundingBox(), await row.locator(".row-body").boundingBox()]; ok(bd.x + bd.width <= bo.x, "badge | body");
-  eq(await row.locator(".badge").evaluate((e) => getComputedStyle(e).backgroundColor), "rgb(15, 110, 110)", "teal badge");
+  eq(await row.locator(".badge").evaluate((e) => getComputedStyle(e).backgroundColor), "rgb(168, 75, 41)", "terracotta badge");
   eq(await page.locator(".pub .badge").count(), await page.locator(".pub").count(), "badge on every entry");
   const order = await row.locator(".row-body > *").evaluateAll((l) => l.map((e) => e.className)); eq(order.slice(0, 4).join(), "pub-title,pub-authors,pub-venue,pub-links", "order");
   const labels = await page.locator(".pub .pub-links a").allTextContents();
@@ -248,11 +322,23 @@ await t("filter counts read as counts (pill + accessible text), identical on pub
     const lbl = await page.locator(`${id} .check`).first().evaluate((e) => e.innerText.replace(/\s+/g, " ").trim()); ok(/^\d{4} \d+$/.test(lbl) || /^\d{4} \d+ \(/.test(lbl), "label " + lbl);
   }
 });
-await t("home portrait: 232px desktop / 112px mobile, sharp source on 2x", async () => {
+await t("PORTRAIT switch: photo (200px desktop / 112px mobile) or none; share image follows it and is served", async () => {
   const p = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
-  await p.goto(B + "/", { waitUntil: "networkidle" }); const r = await p.locator(".profile img").evaluate((i) => ({ w: i.getBoundingClientRect().width, src: i.currentSrc }));
-  eq(Math.round(r.w), 232, "desktop size"); ok(/portrait-340\.(avif|webp)$/.test(r.src), "largest source " + r.src);
-  await p.setViewportSize({ width: 390, height: 844 }); await p.goto(B + "/"); eq(Math.round(await p.locator(".profile img").evaluate((i) => i.getBoundingClientRect().width)), 112, "mobile size");
+  await p.goto(B + "/", { waitUntil: "networkidle" });
+  const og = await p.locator('meta[property="og:image"]').getAttribute("content");
+  eq(og, "https://gauriivaidya.github.io" + (PORTRAIT ? "/og-image.jpg" : "/og-image-brand.jpg"), "og:image");
+  for (const r of ["/publications/", "/contact/"]) { await p.goto(B + r); eq(await p.locator('meta[property="og:image"]').getAttribute("content"), og, "og:image " + r); }
+  const res = await p.request.get(B + new URL(og).pathname); eq(res.status(), 200, "og served"); eq(res.headers()["content-type"], "image/jpeg");
+  const b = await res.body(); ok(b.length > 10000, "og size");
+  await p.goto(B + "/", { waitUntil: "networkidle" });
+  if (PORTRAIT) {
+    const r = await p.locator(".profile img").evaluate((i) => ({ w: i.getBoundingClientRect().width, src: i.currentSrc, dpr: devicePixelRatio }));
+    eq(Math.round(r.w), 200, "desktop size"); ok((r.dpr >= 1.5 ? /-400\.(avif|webp)$/ : /-(200|340|400)\.(avif|webp)$/).test(r.src), "2x screens get the 400w source " + JSON.stringify(r));
+    await p.setViewportSize({ width: 390, height: 844 }); await p.goto(B + "/"); eq(Math.round(await p.locator(".profile img").evaluate((i) => i.getBoundingClientRect().width)), 112, "mobile size");
+  } else {
+    ok(!(await p.content()).includes("portrait-"), "no portrait requested or referenced");
+    await p.setViewportSize({ width: 390, height: 844 }); await p.goto(B + "/");
+  }
   ok(!(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth)), "mobile hscroll"); await p.close();
 });
 await t("booking form: opens as modal, fields + labels, Escape closes and returns focus, validation", async () => {
@@ -348,16 +434,22 @@ await t("theme toggle keyboard accessible", async () => {
 await t("self-hosted fonts only, no third-party requests", async () => {
   const p2 = await browser.newPage(); const ext = []; p2.on("request", (r) => { if (!r.url().startsWith(B)) ext.push(r.url()); });
   await p2.goto(B + "/publications/", { waitUntil: "networkidle" }); await p2.evaluate(() => document.fonts.ready);
-  ok(ext.length === 0, ext.join()); ok(await p2.evaluate(() => document.fonts.check("16px Inter") && document.fonts.check("600 16px Montserrat")), "fonts"); await p2.close();
+  ok(ext.length === 0, ext.join()); ok(await p2.evaluate(() => document.fonts.check("16px Raleway") && document.fonts.check("700 16px Raleway")), "fonts"); await p2.close();
 });
-await t("navbar logo in Great Vibes, loaded and vertically aligned with nav", async () => {
+await t("navbar logo: plain name only (no GV mark) in Raleway 600, ink colour, aligned with nav; GV kept only as favicon", async () => {
   const p3 = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  for (const r of ["/", "/publications/", "/contact/"]) { await p3.goto(B + r);
+    eq(await p3.locator(".gv-mark, .logo svg, .logo img").count(), 0, "no GV mark in the UI " + r);
+    eq(await p3.locator('link[rel="icon"][href="/favicon.svg"]').count(), 1, "GV favicon kept " + r); }
+  for (const f of ["/favicon.svg", "/favicon-32.png", "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png"]) eq((await p3.request.get(B + f)).status(), 200, "icon served " + f);
   await p3.goto(B + "/", { waitUntil: "networkidle" }); await p3.evaluate(() => document.fonts.ready);
   const r = await p3.evaluate(() => { const l = document.querySelector(".logo"), a = document.querySelector(".site-nav a");
     const lb = l.getBoundingClientRect(), ab = a.getBoundingClientRect();
-    return { ff: getComputedStyle(l).fontFamily, loaded: document.fonts.check('31px "Great Vibes"', "Gauri Vaidya"), text: l.textContent.trim(),
+    const cs = getComputedStyle(l), body = getComputedStyle(document.body);
+    return { ff: cs.fontFamily, fw: cs.fontWeight, col: cs.color, ink: body.color, loaded: document.fonts.check('600 19px Raleway', "Gauri Vaidya"), text: l.textContent.trim(),
+      gv: [...document.styleSheets].some((s) => { try { return [...s.cssRules].some((r) => /Great Vibes/.test(r.cssText)); } catch { return false; } }) || !!document.querySelector('link[href*="greatvibes"]'),
       dy: Math.abs((lb.top + lb.bottom) / 2 - (ab.top + ab.bottom) / 2) }; });
-  ok(r.ff.startsWith('"Great Vibes"'), r.ff); ok(r.loaded, "great vibes loaded"); eq(r.text, "Gauri Vaidya");
+  ok(/^"?Raleway/.test(r.ff), r.ff); eq(r.fw, "600", "semibold"); eq(r.col, r.ink, "ink colour"); ok(r.loaded, "raleway 600 loaded"); eq(r.text, "Gauri Vaidya"); ok(!r.gv, "no Great Vibes anywhere");
   ok(r.dy <= 4, "logo/nav vertical offset " + r.dy); await p3.close();
 });
 await t("no console errors", async () => { ok(errors.length === 0, errors.join(" | ")); });

@@ -8,7 +8,7 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.varLib.instancer import instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parent.parent
-TEAL, SOFT, RING = "#0F6E6E", "#E3F0EE", "#C9E1DD"
+BRAND, SOFT, RING = "#A84B29", "#F6E7E0", "#EBCDBF"  # terracotta
 
 def glyphs(font, text):
     gs, cmap, hmtx = font.getGlyphSet(), font.getBestCmap(), font["hmtx"]
@@ -33,19 +33,12 @@ def path_for(font, text, box, cx=32, cy=32, tracking=0):
         g.draw(TransformPen(sp, (s, 0, 0, -s, tx + s * x, ty)))
     return sp.getCommands()
 
-gv = TTFont(ROOT / "public/fonts/greatvibes-logo.woff2")
 ms = instantiateVariableFont(TTFont(ROOT / "public/fonts/montserrat-latin-var.woff2"), {"wght": 600})
 
 svg = lambda body: f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">{body}</svg>\n'
-# A light stroke thickens the hairline calligraphy so it survives 16 px.
-# Great Vibes 'G' has a long flourish; optical centre nudged slightly right/down.
 opts = {
-    "a": svg(f'<circle cx="32" cy="32" r="31" fill="{SOFT}" stroke="{RING}" stroke-width="2"/>'
-             f'<path fill="{TEAL}" stroke="{TEAL}" stroke-width="1.6" stroke-linejoin="round" d="{path_for(gv, "G", (46, 48), 33, 33)}"/>'),
-    "b": svg(f'<rect width="64" height="64" rx="14" fill="{TEAL}"/>'
+    "b": svg(f'<rect width="64" height="64" rx="14" fill="{BRAND}"/>'
              f'<path fill="#fff" d="{path_for(ms, "GV", (44, 24), 32, 32, tracking=-40)}"/>'),
-    "c": svg(f'<circle cx="32" cy="32" r="32" fill="{TEAL}"/>'
-             f'<path fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" d="{path_for(gv, "G", (46, 48), 33, 33)}"/>'),
 }
 out = ROOT / "brand"; out.mkdir(exist_ok=True)
 for k, v in opts.items():
