@@ -55,7 +55,7 @@ export function Home() {
   return (
     <div className="home">
       <section className={`hero about-head${PORTRAIT ? "" : " no-photo"}`}>
-        {PORTRAIT && <figure className="hero-photo profile"><Portrait src={PORTRAIT} className="profile-img" sizes="(max-width: 640px) 120px, 200px" /></figure>}
+        {PORTRAIT && <figure className="hero-photo profile"><Portrait src={PORTRAIT} className="profile-img" sizes="(max-width: 640px) 300px, 600px" /></figure>}
         <div className="hero-id">
           <h1 id="name">Gauri Vaidya</h1>
           <p className="about-role">{site.role}</p>

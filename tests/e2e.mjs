@@ -76,7 +76,8 @@ await t("home = about: hero (optional photo left, name, role, affiliation, icons
   ok(bgParas.every((t) => !/\b(I|my|me)\b/.test(t)), "Background in third person");
   eq(await page.locator("section[aria-labelledby=background-h] .draft").count(), /BACKGROUND_DRAFT = true/.test(homeTs) ? 1 : 0, "draft marker follows BACKGROUND_DRAFT");
   if (PORTRAIT) { const srcset = await page.locator(".profile source[type='image/avif']").getAttribute("srcset");
-  ok(/portrait-400\.avif 400w/.test(srcset) && /portrait-400\.webp 400w/.test(await page.locator(".profile source[type='image/webp']").getAttribute("srcset")), "srcset includes 400w " + srcset); }
+  ok(/portrait-400\.avif 400w/.test(srcset) && /portrait-400\.webp 400w/.test(await page.locator(".profile source[type='image/webp']").getAttribute("srcset")), "srcset includes 400w " + srcset);
+  ok(/portrait-1200\.avif 1200w/.test(srcset) && /portrait-800\.jpg$/.test(await page.locator(".profile img").getAttribute("src")), "hi-res portrait: 1200w in srcset, 800px jpg fallback"); }
   for (const i of [0, 1]) ok(await page.locator(".about-text p").nth(i).isVisible(), "para visible " + i);
   eq(await page.locator(".recog, .stats, .vision").count(), 0, "no stats/recognition strip, no per-card vision lines");
   await page.click("text=Copy short bio"); await page.locator(".copy-btn", { hasText: "Copied" }).waitFor();
@@ -333,7 +334,7 @@ await t("PORTRAIT switch: photo (200px desktop / 112px mobile) or none; share im
   await p.goto(B + "/", { waitUntil: "networkidle" });
   if (PORTRAIT) {
     const r = await p.locator(".profile img").evaluate((i) => ({ w: i.getBoundingClientRect().width, src: i.currentSrc, dpr: devicePixelRatio }));
-    eq(Math.round(r.w), 200, "desktop size"); ok((r.dpr >= 1.5 ? /-400\.(avif|webp)$/ : /-(200|340|400)\.(avif|webp)$/).test(r.src), "2x screens get the 400w source " + JSON.stringify(r));
+    eq(Math.round(r.w), 200, "desktop size"); ok((r.dpr >= 1.5 ? /-1200\.(avif|webp)$/ : /-(600|800|1200)\.(avif|webp)$/).test(r.src), "hi-res source: >=600w at 1x, 1200w at 2x " + JSON.stringify(r));
     await p.setViewportSize({ width: 390, height: 844 }); await p.goto(B + "/"); eq(Math.round(await p.locator(".profile img").evaluate((i) => i.getBoundingClientRect().width)), 112, "mobile size");
   } else {
     ok(!(await p.content()).includes("portrait-"), "no portrait requested or referenced");
