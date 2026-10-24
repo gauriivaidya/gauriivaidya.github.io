@@ -6,7 +6,7 @@ export const shortBio = [
 /** Long bio: text supplied verbatim by Gauri (Oct 2026). */
 export const longBio = [
   "Dr Gauri Vaidya is a Senior Postdoctoral Researcher with the National Kidney Disease Surveillance System at the University of Limerick. Her work applies advanced data analytics and machine learning to understand the burden and impact of kidney disease in Ireland and develop evidence-based strategies that improve patient outcomes.",
-  "Her expertise spans optimisation, artificial intelligence, machine learning, and large-scale health data analytics. She has contributed to interdisciplinary projects in blockchain, knowledge graphs, and large language models, collaborating with domain experts, researchers, and industry partners.",
+  "Her expertise spans optimisation, artificial intelligence, machine learning, and large-scale health data analytics. She has contributed to interdisciplinary projects in blockchain, knowledge graphs, large language models, and agentic AI, collaborating with domain experts, researchers, and industry partners.",
   "Gauri has received several national and international accolades, including recognition as one of the Business Post 30 Under 30: Top People in Tech 2025, the SPECIES International Research Scholarship for a research visit to Sweden, and first prize at the Smart India Hackathon. Her work has also been featured by the Business Post, The Times of India, and atoti.",
 ];
 
