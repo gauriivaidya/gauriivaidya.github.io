@@ -1,3 +1,5 @@
+import type { PhraseLink } from "./bio";
+
 /**
  * Home-page content.
  *
@@ -37,6 +39,20 @@ export const areas: Area[] = [
  * Set BACKGROUND_DRAFT = false once approved to drop the marker.
  */
 export const BACKGROUND_DRAFT = false;
+
+/**
+ * Background links: each organisation linked once across both paragraphs (same mechanism and look as the bio links).
+ * Verified Oct 2026: official sites, HTTP 200 (intel.com blocks automated checks but is Intel's official site). The PhD links
+ * to CRT-AI because the CV lists her Doctoral Fellowship (2021–2025) with that centre.
+ */
+export const backgroundLinks: ReadonlyArray<PhraseLink> = [
+  ["Government College of Engineering, Aurangabad", "https://geca.ac.in/"],
+  ["Biocomputing and Developmental Systems Research Group", "https://bds.ul.ie/"],
+  ["Intel", "https://www.intel.com/"],
+  ["Principal Global Services", "https://careers.principal.com/in/"],
+  ["PhD in Artificial Intelligence", "https://www.crt-ai.ie/"],
+  ["National Kidney Disease Surveillance System", "https://www.nkdss.ie/"],
+];
 export const background = [
   "Gauri began in computer science, with a Bachelor of Engineering from the Government College of Engineering, Aurangabad, India (2016–2020). As a research intern with the Biocomputing and Developmental Systems Research Group at the University of Limerick (2019–2021), she worked on a cryptographically secure pseudo-random number generator with Intel and a blockchain framework for sharing electronic health records, and she spent a year as a Trainee Analyst at Principal Global Services in India.",
   "She went on to a PhD in Artificial Intelligence at the University of Limerick (2021–2025), with a thesis on efficient hyperparameter optimisation for streamlining model training in machine and deep learning. In 2025 she joined the National Kidney Disease Surveillance System at the University of Limerick, where she is now a Senior Postdoctoral Researcher applying data analytics and machine learning to kidney disease in Ireland.",

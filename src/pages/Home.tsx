@@ -2,8 +2,8 @@ import { BookingDialog } from "../components/BookingDialog";
 import { useCopy } from "../components/copy";
 import { Icon } from "../components/Icons";
 import { Portrait, SocialRow } from "../components/ProfileLinks";
-import { bioLinks, longBio, shortBio } from "../data/bio";
-import { areas, background, BACKGROUND_DRAFT, PORTRAIT, type Area } from "../data/home";
+import { bioLinks, longBio, shortBio, type PhraseLink } from "../data/bio";
+import { areas, background, backgroundLinks, BACKGROUND_DRAFT, PORTRAIT, type Area } from "../data/home";
 import { site } from "../data/site";
 import { Link } from "../router";
 import type { MouseEvent, ReactNode } from "react";
@@ -26,13 +26,25 @@ function Section({ id, title, all, children }: { id: string; title: string; all?
   );
 }
 
-/** Wraps the first occurrence of each bioLinks phrase in an external link; the visible text stays exactly the source string. */
-function linkify(text: string): ReactNode[] {
-  const hits = bioLinks.map(([phrase, url]) => ({ phrase, url, at: text.indexOf(phrase) })).filter((h) => h.at >= 0).sort((a, b) => a.at - b.at);
+/**
+ * Wraps the first whole-word occurrence of each link phrase in an external link; the visible text stays exactly the source string.
+ * `used` (optional) carries phrases already linked in earlier paragraphs, so each one is linked only once across a section.
+ */
+function linkify(text: string, links: ReadonlyArray<PhraseLink> = bioLinks, used?: Set<string>): ReactNode[] {
+  const find = (phrase: string, after?: string) => {
+    let from = 0;
+    if (after) { const a = text.indexOf(after); if (a < 0) return -1; from = a + after.length; }
+    const esc = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const m = new RegExp(`(?<![\\p{L}\\p{N}])${esc}(?![\\p{L}\\p{N}])`, "u").exec(text.slice(from));
+    return m ? from + m.index : -1;
+  };
+  const hits = links.filter(([phrase]) => !used?.has(phrase)).map(([phrase, url, after]) => ({ phrase, url, at: find(phrase, after) }))
+    .filter((h) => h.at >= 0).sort((a, b) => a.at - b.at);
   const out: ReactNode[] = []; let i = 0;
   for (const h of hits) {
     if (h.at < i) continue;
     out.push(text.slice(i, h.at), <a key={h.url} href={h.url} target="_blank" rel="noopener noreferrer">{h.phrase}</a>);
+    used?.add(h.phrase);
     i = h.at + h.phrase.length;
   }
   out.push(text.slice(i));
@@ -52,6 +64,7 @@ function jumpTo(e: MouseEvent<HTMLAnchorElement>, id: string) {
 
 /** Home: hero + photo; bio ¶1 + accolades (¶3) verbatim; two research cards; Background story (Pranav Rajpurkar pattern); contact. */
 export function Home() {
+  const bgUsed = new Set<string>();
   return (
     <div className="home">
       <section className={`hero about-head${PORTRAIT ? "" : " no-photo"}`}>
@@ -91,7 +104,7 @@ export function Home() {
 
       <Section id="background" title="Background">
         <div className="background">
-          {background.map((p, i) => <p key={i}>{i === 0 && BACKGROUND_DRAFT && <span className="draft" title="Draft wording for Gauri to approve">Draft</span>}{p}</p>)}
+          {background.map((p, i) => <p key={i}>{i === 0 && BACKGROUND_DRAFT && <span className="draft" title="Draft wording for Gauri to approve">Draft</span>}{linkify(p, backgroundLinks, bgUsed)}</p>)}
         </div>
       </Section>
 
