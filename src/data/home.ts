@@ -6,7 +6,7 @@ import type { PhraseLink } from "./bio";
  * PORTRAIT — single switch for the home photo.
  *   null  → no photo: the hero is type-only and the share (OG) image is the GV brand card /og-image-brand.jpg.
  *   "/images/portrait" → shows the framed portrait; files must exist as
- *            `${PORTRAIT}-{96,192,200,340,400}.{avif,webp}` and `${PORTRAIT}-340.jpg`; the share image becomes /og-image.jpg.
+ *            `${PORTRAIT}-{96,192,200,340,400}.{avif,webp}` and `${PORTRAIT}-{340,400}.jpg`; the share image becomes /og-image.jpg.
  */
 export const PORTRAIT: string | null = "/images/portrait";
 export const OG_IMAGE = PORTRAIT ? "/og-image.jpg" : "/og-image-brand.jpg";
