@@ -23,7 +23,7 @@ export type Area = { title: string; eyebrow: string; summary: string; icon: stri
 export const areas: Area[] = [
   {
     eyebrow: "Current work", title: "Kidney disease", icon: "pulse",
-    summary: "Advanced data analytics and machine learning with the National Kidney Disease Surveillance System, to understand the burden and impact of kidney disease in Ireland and develop evidence-based strategies that improve patient outcomes.",
+    summary: "Artificial intelligence, machine learning, and large language models with the National Kidney Disease Surveillance System, to understand the burden and impact of kidney disease in Ireland and develop evidence-based strategies that improve patient outcomes.",
   },
   {
     eyebrow: "Expertise", title: "Optimisation, AI & Large-Scale Data Analytics", icon: "sliders", topic: "expertise",
@@ -55,5 +55,5 @@ export const backgroundLinks: ReadonlyArray<PhraseLink> = [
 ];
 export const background = [
   "Gauri began in computer science, with a Bachelor of Engineering from the Government College of Engineering, Aurangabad, India (2016–2020). As a research intern with the Biocomputing and Developmental Systems Research Group at the University of Limerick (2019–2021), she worked on a cryptographically secure pseudo-random number generator with Intel and a blockchain framework for sharing electronic health records, and she spent a year as a Trainee Analyst at Principal Global Services in India.",
-  "She went on to a PhD in Artificial Intelligence at the University of Limerick (2021–2025), with a thesis on efficient hyperparameter optimisation for streamlining model training in machine and deep learning. In 2025 she joined the National Kidney Disease Surveillance System at the University of Limerick, where she is now a Senior Postdoctoral Researcher applying data analytics and machine learning to kidney disease in Ireland.",
+  "She went on to a PhD in Artificial Intelligence at the University of Limerick (2021–2025), with a thesis on efficient hyperparameter optimisation for streamlining model training in machine and deep learning. In 2025 she joined the National Kidney Disease Surveillance System at the University of Limerick, where she is now a Senior Postdoctoral Researcher applying artificial intelligence, machine learning, and large language models to kidney disease in Ireland.",
 ];

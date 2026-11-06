@@ -181,6 +181,10 @@ def publications():
         cv = {"section": cv} if isinstance(cv, str) else cv
         f = fields(body)
         cite = _authors(f.get("author", "")) + ". ``" + plain(sentence(clean(f.get("title", "")))) + "'' " + _venue(etype, f, cv)
+        doi = clean(f.get("doi", "")) or str(meta.get(key, {}).get("doi") or "")
+        doi = doi.replace("https://doi.org/", "").strip()
+        if doi:
+            cite = cite.rstrip(".") + r". \href{https://doi.org/%s}{link}" % plain(doi)
         year = int(f["year"]) if f.get("year", "").isdigit() else 0
         secs.setdefault(cv["section"], []).append((-year, idx, cite))
     order = [s for s in PUB_SECTIONS if s in secs] + [s for s in secs if s not in PUB_SECTIONS]
@@ -225,7 +229,26 @@ def render():
                              variable_start_string="(((", variable_end_string=")))", comment_start_string="((=", comment_end_string="=))",
                              trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.StrictUndefined, autoescape=False)
     updated = __import__("os").environ.get("CV_DATE") or datetime.now(ZoneInfo("Europe/London")).strftime("%-d %b %Y")
-    src = env.get_template(TEMPLATE.name).render(updated=fmt_date(updated), show_placeholders=__import__("os").environ.get("CV_PLACEHOLDERS") == "1", awards=awards(), teaching=teaching(), talks=talks(), publications=publications())
+    pubs = publications()
+    # Compact summary table counts from the sections actually rendered on the CV.
+    counts = [(h, len(items)) for h, items in pubs]
+    rows = []
+    for j in range(0, len(counts), 2):
+        left = f"{counts[j][0]} & {counts[j][1]}"
+        if j + 1 < len(counts):
+            right = f"{counts[j+1][0]} & {counts[j+1][1]}"
+        else:
+            right = "&"
+        rows.append(f"{left} & {right} \\\\")
+    pub_summary = (
+        r"{\sizeEntry" + "\n"
+        r"\begin{tabularx}{\textwidth}{@{}X r@{\hspace{1.5em}} X r@{}}" + "\n"
+        + "\n".join(rows) + "\n"
+        + r"\end{tabularx}" + "\n"
+        + r"}\par\vspace{6pt}"
+        if counts else ""
+    )
+    src = env.get_template(TEMPLATE.name).render(updated=fmt_date(updated), show_placeholders=__import__("os").environ.get("CV_PLACEHOLDERS") == "1", awards=awards(), teaching=teaching(), talks=talks(), publications=pubs, pub_summary=pub_summary)
     code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("%"))   # commented-out lines never reach the PDF
     problems = privacy_problems(code, "tex")
     if problems: raise content.ContentError("privacy check failed on the CV source: contains " + ", ".join(problems))

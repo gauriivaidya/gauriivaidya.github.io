@@ -22,7 +22,8 @@
   },
   "kshirsagar2022trustworthiness": {
     "abbr": "IJNCR",
-    "cv": "Journal Articles"
+    "cv": "Journal Articles",
+    "doi": "10.4018/ijncr.310006"
   },
   "kshirsagar2023annotation": {
     "type": "other",
@@ -38,7 +39,8 @@
   },
   "kshirsagar2023sensible": {
     "abbr": "Eng. Rep.",
-    "cv": "Journal Articles"
+    "cv": "Journal Articles",
+    "doi": "10.1002/eng2.12586"
   },
   "kshirsagar2024hnscc": {
     "type": "other",
@@ -73,7 +75,8 @@
   },
   "ryan2022prng": {
     "abbr": "Sci. Rep.",
-    "cv": "Journal Articles"
+    "cv": "Journal Articles",
+    "doi": "10.1038/s41598-022-11613-x"
   },
   "urban2025datapulse": {
     "abbr": "DATA"
@@ -97,7 +100,8 @@
   },
   "vaidya2023grammatical": {
     "abbr": "Algorithms",
-    "cv": "Journal Articles"
+    "cv": "Journal Articles",
+    "doi": "10.3390/a16070319"
   },
   "vaidya2024hyperge": {
     "type": "other",
@@ -128,7 +132,8 @@
   },
   "yao2021convergence": {
     "abbr": "Front. Blockchain",
-    "cv": "Journal Articles"
+    "cv": "Journal Articles",
+    "doi": "10.3389/fbloc.2021.661238"
   },
   "yao2024knowledge": {
     "abbr": "Chapter",

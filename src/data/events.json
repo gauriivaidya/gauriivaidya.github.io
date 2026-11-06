@@ -1,5 +1,14 @@
 [
   {
+    "id": "structuring-clinical-narratives-lessons-from-a-n",
+    "title": "Structuring Clinical Narratives: Lessons from a Nephrology BioCuration Workflow",
+    "type": "Invited Talks",
+    "date": "12 Oct 2026",
+    "year": 2026,
+    "host": "EMBL-EBI BioCuration Webinar",
+    "role": "Invited Speaker"
+  },
+  {
     "id": "30-under-30-top-people-in-tech-2025",
     "title": "30 Under 30: Top People in Tech 2025",
     "type": "Awards / Recognition",
@@ -7,6 +16,17 @@
     "year": 2025,
     "host": "Business Post",
     "role": "Honouree"
+  },
+  {
+    "id": "strategizing-the-search-efficient-frameworks-for",
+    "title": "Strategizing the Search: Efficient Frameworks for Resource-Conscious Hyperparameter Tuning in Machine and Deep Learning Models",
+    "type": "Invited Talks",
+    "date": "13 Nov 2025",
+    "year": 2025,
+    "host": "Jönköping University",
+    "location": "Sweden",
+    "role": "Invited Speaker",
+    "description": "Fifteenth invited lecture in the AToNIIC series (Applications and Theory of Nature-Inspired Intelligent Computing), hosted by Dr Alexandros Tzanetos."
   },
   {
     "id": "breaking-barriers-addressing-algorithmic-bias-fo",

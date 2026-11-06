@@ -93,6 +93,7 @@ main{outline:none;flex:1 0 auto}
 .field input,.field select{font:400 var(--fs-ui) var(--font-body);color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:8px;min-height:40px;padding:0 12px;width:100%}
 .field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
 .count{font-size:var(--fs-xs);color:var(--text-2);margin:12px 0 4px}
+.pub-summary{font-size:var(--fs-sm);color:var(--text-2);margin:0 0 14px;line-height:1.5}
 .empty{padding:28px 0;color:var(--text-2)}
 
 /* al-folio-style year groups + rows (publications, teaching, talks) */

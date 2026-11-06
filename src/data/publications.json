@@ -407,7 +407,7 @@
     "volume": "16",
     "issue": "7",
     "pages": "319",
-    "doi": null,
+    "doi": "10.3390/a16070319",
     "url": null,
     "abbr": "Algorithms",
     "abstract": null,
@@ -416,7 +416,7 @@
     "slides": null,
     "video": null,
     "project": null,
-    "bibtex": "@article{vaidya2023grammatical,\n  author  = {Vaidya, Gauri and Kshirsagar, Meghana and Ryan, Conor},\n  title   = {Grammatical Evolution-Driven Algorithm for Efficient and Automatic Hyperparameter Optimisation of Neural Networks},\n  journal = {Algorithms},\n  year    = {2023},\n  volume  = {16},\n  number  = {7},\n  pages   = {319}\n}"
+    "bibtex": "@article{vaidya2023grammatical,\n  author  = {Vaidya, Gauri and Kshirsagar, Meghana and Ryan, Conor},\n  title   = {Grammatical Evolution-Driven Algorithm for Efficient and Automatic Hyperparameter Optimisation of Neural Networks},\n  journal = {Algorithms},\n  year    = {2023},\n  volume  = {16},\n  number  = {7},\n  pages   = {319},\n  doi     = {10.3390/a16070319}\n}"
   },
   {
     "key": "kshirsagar2023sensible",
@@ -436,7 +436,7 @@
     "volume": "5",
     "issue": "7",
     "pages": "e12586",
-    "doi": null,
+    "doi": "10.1002/eng2.12586",
     "url": null,
     "abbr": "Eng. Rep.",
     "abstract": null,
@@ -445,7 +445,7 @@
     "slides": null,
     "video": null,
     "project": null,
-    "bibtex": "@article{kshirsagar2023sensible,\n  author  = {Kshirsagar, Meghana and Vaidya, Gauri and Yao, Y. and Kasar, S. and Ryan, Conor},\n  title   = {Sensible: Sequestered and Synergistic Blockchain Ecosystem},\n  journal = {Engineering Reports},\n  year    = {2023},\n  volume  = {5},\n  number  = {7},\n  pages   = {e12586}\n}"
+    "bibtex": "@article{kshirsagar2023sensible,\n  author  = {Kshirsagar, Meghana and Vaidya, Gauri and Yao, Y. and Kasar, S. and Ryan, Conor},\n  title   = {Sensible: Sequestered and Synergistic Blockchain Ecosystem},\n  journal = {Engineering Reports},\n  year    = {2023},\n  volume  = {5},\n  number  = {7},\n  pages   = {e12586},\n  doi     = {10.1002/eng2.12586}\n}"
   },
   {
     "key": "vaidya2023gehp",
@@ -553,7 +553,7 @@
     "volume": "12",
     "issue": "1",
     "pages": "8602",
-    "doi": null,
+    "doi": "10.1038/s41598-022-11613-x",
     "url": null,
     "abbr": "Sci. Rep.",
     "abstract": null,
@@ -562,7 +562,7 @@
     "slides": null,
     "video": null,
     "project": null,
-    "bibtex": "@article{ryan2022prng,\n  author  = {Ryan, Conor and Kshirsagar, Meghana and Vaidya, Gauri and Cunningham, A. and Sivaraman, R.},\n  title   = {Design of a Cryptographically Secure Pseudo Random Number Generator with Grammatical Evolution},\n  journal = {Scientific Reports},\n  year    = {2022},\n  volume  = {12},\n  number  = {1},\n  pages   = {8602}\n}"
+    "bibtex": "@article{ryan2022prng,\n  author  = {Ryan, Conor and Kshirsagar, Meghana and Vaidya, Gauri and Cunningham, A. and Sivaraman, R.},\n  title   = {Design of a Cryptographically Secure Pseudo Random Number Generator with Grammatical Evolution},\n  journal = {Scientific Reports},\n  year    = {2022},\n  volume  = {12},\n  number  = {1},\n  pages   = {8602},\n  doi     = {10.1038/s41598-022-11613-x}\n}"
   },
   {
     "key": "kshirsagar2022digitalhealth",
@@ -639,7 +639,7 @@
     "volume": "11",
     "issue": "1",
     "pages": "1–23",
-    "doi": null,
+    "doi": "10.4018/ijncr.310006",
     "url": null,
     "abbr": "IJNCR",
     "abstract": null,
@@ -648,7 +648,7 @@
     "slides": null,
     "video": null,
     "project": null,
-    "bibtex": "@article{kshirsagar2022trustworthiness,\n  author  = {Kshirsagar, Meghana and Gupt, K. K. and Vaidya, Gauri and Ryan, Conor and Sullivan, J. P. and Kshirsagar, Vivek},\n  title   = {Insights into Incorporating Trustworthiness and Ethics in AI Systems with Explainable AI},\n  journal = {International Journal of Natural Computing Research (IJNCR)},\n  year    = {2022},\n  volume  = {11},\n  number  = {1},\n  pages   = {1--23}\n}"
+    "bibtex": "@article{kshirsagar2022trustworthiness,\n  author  = {Kshirsagar, Meghana and Gupt, K. K. and Vaidya, Gauri and Ryan, Conor and Sullivan, J. P. and Kshirsagar, Vivek},\n  title   = {Insights into Incorporating Trustworthiness and Ethics in AI Systems with Explainable AI},\n  journal = {International Journal of Natural Computing Research (IJNCR)},\n  year    = {2022},\n  volume  = {11},\n  number  = {1},\n  pages   = {1--23},\n  doi     = {10.4018/ijncr.310006}\n}"
   },
   {
     "key": "yao2021convergence",
@@ -668,7 +668,7 @@
     "volume": "4",
     "issue": null,
     "pages": "661238",
-    "doi": null,
+    "doi": "10.3389/fbloc.2021.661238",
     "url": null,
     "abbr": "Front. Blockchain",
     "abstract": null,
@@ -677,7 +677,7 @@
     "slides": null,
     "video": null,
     "project": null,
-    "bibtex": "@article{yao2021convergence,\n  author  = {Yao, Y. and Kshirsagar, Meghana and Vaidya, Gauri and Ducr{\\'e}e, J. and Ryan, Conor},\n  title   = {Convergence of Blockchain, Autonomous Agents, and Knowledge Graph to Share Electronic Health Records},\n  journal = {Frontiers in Blockchain},\n  year    = {2021},\n  volume  = {4},\n  pages   = {661238}\n}"
+    "bibtex": "@article{yao2021convergence,\n  author  = {Yao, Y. and Kshirsagar, Meghana and Vaidya, Gauri and Ducr{\\'e}e, J. and Ryan, Conor},\n  title   = {Convergence of Blockchain, Autonomous Agents, and Knowledge Graph to Share Electronic Health Records},\n  journal = {Frontiers in Blockchain},\n  year    = {2021},\n  volume  = {4},\n  pages   = {661238},\n  doi     = {10.3389/fbloc.2021.661238}\n}"
   },
   {
     "key": "bindra2021insights",

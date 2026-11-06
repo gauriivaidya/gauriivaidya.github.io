@@ -41,8 +41,10 @@ export function Publications() {
     ...[...types].map((t) => ({ k: "t" + t, label: TYPE_LABEL[t], clear: () => setTypes(toggle(types, t)) })),
   ];
   const clearAll = () => { setQ(""); setTopic(""); setYears(new Set()); setTypes(new Set()); };
+  const summary = typeOpts.map((o) => `${o.label} ${o.count}`).join(" · ");
   return (
     <PageLayout title="Publications" wide action={<a className="btn btn-ghost btn-scholar" href={site.contact.scholar} target="_blank" rel="noopener noreferrer"><Icon name="scholar" /> Full list on Google Scholar <span aria-hidden="true">↗</span><span className="sr-only">(opens in a new tab)</span></a>}>
+      <p className="pub-summary">{pubs.length} publications — {summary}</p>
       <div className="filters" role="search">
         <Search id="pub-q" label="Search" value={q} onChange={setQ} placeholder="Title, author, venue…" />
         <Select id="pub-sort" label="Sort" value={sort} onChange={setSort} options={[{ value: "newest", label: "Newest first" }, { value: "oldest", label: "Oldest first" }]} />
